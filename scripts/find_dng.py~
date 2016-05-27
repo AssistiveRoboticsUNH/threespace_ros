@@ -28,9 +28,11 @@ def returnDev(arg):
                 while((panid==None)or(channel==None)or(wa==None)):
                     try:
                         att+=1
-                        rospy.loginfo("Attempting to get Dongle data, attempt #%d",att)
-                        paid = tsa.TSDongle.getWirelessPanID(dongle)
+                        if(att > 10):
+                            break
+                        rospy.loginfo("Attempting to get Dongle data from port %s, attempt #%d",a_port ,att)
                         channel  = tsa.TSDongle.getWirelessChannel(dongle)
+                        panid = tsa.TSDongle.getWirelessPanID(dongle)
                         wa = tsa.TSDongle.getWirelessAddress(dongle)
                         rospy.logwarn("HW ID : %s", hwid)
                         rospy.logwarn("PanID : %s", panid)
@@ -38,9 +40,6 @@ def returnDev(arg):
                         rospy.logwarn("Wireless Address %s", wa)
                         rospy.logwarn(dongle.wireless_table)
                         dng_list.append(dongle)
-                        if(att>10):
-                            break
-                        break
                     except:
                         pass
             except:
@@ -50,10 +49,10 @@ def returnDev(arg):
     else:
         for a_port in result:
             try:
-                rospy.loginfo("Checking for dongle in port %s", a_port)
+                rospy.loginfo("Checking for wireless sensor in port %s", a_port)
                 sensor = tsa.TSWLSensor(com_port = a_port, baudrate=115200)
-                rospy.logwarn(dongle)
-                hwid = convertString(dongle.f7WriteRead('getSerialNumber'))
+                rospy.logwarn(sensor)
+                hwid = convertString(sensor.f7WriteRead('getSerialNumber'))
                 panid = None
                 channel = None
                 wa = None
@@ -61,19 +60,18 @@ def returnDev(arg):
                 while((panid==None)or(channel==None)or(wa==None)):
                     try:
                         att+=1
-                        rospy.loginfo("Attempting to get Wireless Sensor data, attempt $%d",att)
-                        paid = tsa.TSDongle.getWirelessPanID(sensor)
-                        channel  = tsa.TSDongle.getWirelessChannel(sensor)
-                        wa = tsa.TSDongle.getWirelessAddress(sensor)
+                        if(att > 10):
+                            break
+                        rospy.loginfo("Attempting to get Wireless Sensor data from port %s, attempt $%d",a_port, att)
+                        channel = tsa.TSWLSensor.getWirelessChannel(sensor)
+                        #tsa.TSWLSensor.setWirelessPanID(sensor, channel)
+                        panid = tsa.TSWLSensor.getWirelessPanID(sensor)
+                        wa = tsa.TSWLSensor.getWirelessAddress(sensor)
                         rospy.logwarn("HW ID : %s", hwid)
                         rospy.logwarn("PanID : %s", panid)
                         rospy.logwarn("Channel : %s", channel)
                         rospy.logwarn("Wireless Address %s", wa)
-                        rospy.logwarn(sensor.wireless_table)
                         dev_list.append(sensor)
-                        if(att>10):
-                            break
-                        break
                     except:
                         pass
             except:
