@@ -1,4 +1,5 @@
 Header header
+geometry_msgs/QuaternionStamped quat
 float64 gyroX
 float64 gyroY
 float64 gyroZ

@@ -29,13 +29,14 @@ for d in dongle_list:
         if device == None:
             rospy.logerr("No Sensor Found")
         else:
-            quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
+            #quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
             id = str(device)
             id = id[id.find('W'):-1]
             rospy.logerr(id)
             #rospy.logerr(quat)
             frame = sensor_table.sensor_table.get(id)
             rospy.logerr("Adding publisher for %s : %s",id,frame)
+            rospy.logerr("Battery at %s Percent ", tsa.TSWLSensor.getBatteryPercentRemaining(device))
             br = tf2_ros.TransformBroadcaster()
             pub = rospy.Publisher(frame, geometry_msgs.msg.QuaternionStamped, queue_size = 100)
             dv_pub = rospy.Publisher(frame+suffix, dataVec, queue_size = 100)
@@ -70,26 +71,30 @@ while not rospy.is_shutdown():
             #globalAccel = tsa.TSWLSensor.getCorrectedLinearAccelerationInGlobalSpace(device)
             #print globalAccel
             full = tsa.TSWLSensor.getAllCorrectedComponentSensorData(device)
-            print full
-            r.sleep()
+            #print full
+            #r.sleep()
             if (quat is not None)and(full is not None):
                 id = str(device)
                 id = id[id.find('W'):-1]
                 frame = sensor_table.sensor_table.get(id)
                 #rospy.logwarn("%s : %s ---> %s",id,frame,quat)
-                p = publishers.get(frame)
+                #p = publishers.get(frame)
                 d = dv_publishers.get(frame)
-                b = broadcasters.get(frame)
-                t.header.stamp = rospy.Time.now()
-                t.header.frame_id = "world"
-                t.child_frame_id = frame
-                t.transform.translation.x = 0.0
-                t.transform.translation.y = 0.0
-                t.transform.translation.z = 0.0
-                g.quaternion.x = quat[0]
-                g.quaternion.y = quat[1]
-                g.quaternion.z = quat[2]
-                g.quaternion.w = quat[3]
+                #b = broadcasters.get(frame)
+                #t.header.stamp = rospy.Time.now()
+                #t.header.frame_id = "world"
+                #t.child_frame_id = frame
+                #t.transform.translation.x = 0.0
+                #t.transform.translation.y = 0.0
+                #t.transform.translation.z = 0.0
+                #g.quaternion.x = quat[0]
+                #g.quaternion.y = quat[1]
+                #g.quaternion.z = quat[2]
+                #g.quaternion.w = quat[3]
+                dv.quat.quaternion.x = quat[0]
+                dv.quat.quaternion.y = quat[1]
+                dv.quat.quaternion.z = quat[2]
+                dv.quat.quaternion.w = quat[3]
                 dv.gyroX = full[0]
                 dv.gyroY = full[1]
                 dv.gyroZ = full[2]
@@ -99,9 +104,9 @@ while not rospy.is_shutdown():
                 dv.comX = full[6]
                 dv.comY = full[7]
                 dv.comZ = full[8]
-                t.transform.rotation = g.quaternion
-                b.sendTransform(t)
-                p.publish(g)
+                #t.transform.rotation = g.quaternion
+                #b.sendTransform(t)
+                #p.publish(g)
                 d.publish(dv)
 
 print publishers

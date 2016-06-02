@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  geometry_mgs
   tf
   tf2
   message_generation
@@ -73,6 +74,7 @@ add_message_files(
 generate_messages(
    DEPENDENCIES
    sensor_msgs#   std_msgs
+   geometry_msgs
 )
 
 ################################################
