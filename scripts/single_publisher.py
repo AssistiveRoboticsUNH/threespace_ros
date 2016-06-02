@@ -43,6 +43,8 @@ for d in dongle_list:
             broadcasters[frame] = br
             publishers[frame] = pub
             dv_publishers[frame] = dv_pub
+            tsa.TSWLSensor.setStreamingSlots(device, slot0='getTaredOrientationAsQuaternion',\
+            slot1='getAllCorrectedComponentSensorData')
 
 t = geometry_msgs.msg.TransformStamped()
 g = geometry_msgs.msg.QuaternionStamped()
@@ -60,7 +62,7 @@ while not rospy.is_shutdown():
             #while True:
             #    quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
             #    print quat
-            quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
+            #quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
             #print quat
             #gyro = tsa.TSWLSensor.getCorrectedGyroRate(device)
             #print gyro
@@ -70,10 +72,17 @@ while not rospy.is_shutdown():
             #print accel
             #globalAccel = tsa.TSWLSensor.getCorrectedLinearAccelerationInGlobalSpace(device)
             #print globalAccel
-            full = tsa.TSWLSensor.getAllCorrectedComponentSensorData(device)
+            #full = tsa.TSWLSensor.getAllCorrectedComponentSensorData(device)
             #print full
             #r.sleep()
+            batch = tsa.TSWLSensor.getStreamingBatch(device)
+            if (batch is not None):
+                quat = batch[0:4]
+                full = batch[4:]
             if (quat is not None)and(full is not None):
+            #if (batch is not None):
+                #quat = batch[0:4]
+                #full = batch[4:]
                 id = str(device)
                 id = id[id.find('W'):-1]
                 frame = sensor_table.sensor_table.get(id)
