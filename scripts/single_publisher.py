@@ -55,51 +55,51 @@ for d in dongle_list:
         dev_list.append(dev)
   
 while not rospy.is_shutdown():
-    #r.sleep()
-    #for d in dongle_list:
+    # r.sleep()
+    # for d in dongle_list:
     for device in dev_list:
         if device is not None:
-            #while True:
+            # while True:
             #    quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
             #    print quat
-            #quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
-            #print quat
-            #gyro = tsa.TSWLSensor.getCorrectedGyroRate(device)
-            #print gyro
-            #compass = tsa.TSWLSensor.getCorrectedCompassVector(device)
-            #print compass
-            #accel = tsa.TSWLSensor.getCorrectedAccelerometerVector(device)
-            #print accel
-            #globalAccel = tsa.TSWLSensor.getCorrectedLinearAccelerationInGlobalSpace(device)
-            #print globalAccel
-            #full = tsa.TSWLSensor.getAllCorrectedComponentSensorData(device)
-            #print full
-            #r.sleep()
+            # quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
+            # print quat
+            # gyro = tsa.TSWLSensor.getCorrectedGyroRate(device)
+            # print gyro
+            # compass = tsa.TSWLSensor.getCorrectedCompassVector(device)
+            # print compass
+            # accel = tsa.TSWLSensor.getCorrectedAccelerometerVector(device)
+            # print accel
+            # globalAccel = tsa.TSWLSensor.getCorrectedLinearAccelerationInGlobalSpace(device)
+            # print globalAccel
+            # full = tsa.TSWLSensor.getAllCorrectedComponentSensorData(device)
+            # print full
+            # r.sleep()
             batch = tsa.TSWLSensor.getStreamingBatch(device)
-            if (batch is not None):
+            if batch is not None :
                 quat = batch[0:4]
                 full = batch[4:]
             if (quat is not None)and(full is not None):
-            #if (batch is not None):
-                #quat = batch[0:4]
-                #full = batch[4:]
-                id = str(device)
-                id = id[id.find('W'):-1]
-                frame = sensor_table.sensor_table.get(id)
-                #rospy.logwarn("%s : %s ---> %s",id,frame,quat)
-                #p = publishers.get(frame)
+            # if (batch is not None):
+                # quat = batch[0:4]
+                # full = batch[4:]
+                id_ = str(device)
+                id_ = id[id.find('W'):-1]
+                frame = sensor_table.sensor_table.get(id_)
+                # rospy.logwarn("%s : %s ---> %s",id,frame,quat)
+                # p = publishers.get(frame)
                 d = dv_publishers.get(frame)
-                #b = broadcasters.get(frame)
-                #t.header.stamp = rospy.Time.now()
-                #t.header.frame_id = "world"
-                #t.child_frame_id = frame
-                #t.transform.translation.x = 0.0
-                #t.transform.translation.y = 0.0
-                #t.transform.translation.z = 0.0
-                #g.quaternion.x = quat[0]
-                #g.quaternion.y = quat[1]
-                #g.quaternion.z = quat[2]
-                #g.quaternion.w = quat[3]
+                # b = broadcasters.get(frame)
+                # t.header.stamp = rospy.Time.now()
+                # t.header.frame_id = "world"
+                # t.child_frame_id = frame
+                # t.transform.translation.x = 0.0
+                # t.transform.translation.y = 0.0
+                # t.transform.translation.z = 0.0
+                # g.quaternion.x = quat[0]
+                # g.quaternion.y = quat[1]
+                # g.quaternion.z = quat[2]
+                # g.quaternion.w = quat[3]
                 dv.quat.quaternion.x = quat[0]
                 dv.quat.quaternion.y = quat[1]
                 dv.quat.quaternion.z = quat[2]
@@ -113,11 +113,13 @@ while not rospy.is_shutdown():
                 dv.comX = full[6]
                 dv.comY = full[7]
                 dv.comZ = full[8]
-                #t.transform.rotation = g.quaternion
-                #b.sendTransform(t)
-                #p.publish(g)
+                # t.transform.rotation = g.quaternion
+                # b.sendTransform(t)
+                # p.publish(g)
                 d.publish(dv)
 
+for d in dongle_list:
+    tsa.TSWLSensor.close(device)
 print publishers
 print dv_publishers
 print broadcasters
