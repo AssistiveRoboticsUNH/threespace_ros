@@ -26,16 +26,16 @@ broadcasters = {}
 for d in dongle_list:
     tsa.TSDongle.broadcastSynchronizationPulse(d)
     for device in d:
-        if device == None:
+        if device is None:
             rospy.logerr("No Sensor Found")
         else:
-            #quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
-            id = str(device)
-            id = id[id.find('W'):-1]
-            rospy.logerr(id)
-            #rospy.logerr(quat)
-            frame = sensor_table.sensor_table.get(id)
-            rospy.logerr("Adding publisher for %s : %s",id,frame)
+            # quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
+            id_ = str(device)
+            id_ = id_[id_.find('W'):-1]
+            rospy.logerr(id_)
+            # rospy.logerr(quat)
+            frame = sensor_table.sensor_table.get(id_)
+            rospy.logerr("Adding publisher for %s : %s", id_, frame)
             rospy.logerr("Battery at %s Percent ", tsa.TSWLSensor.getBatteryPercentRemaining(device))
             br = tf2_ros.TransformBroadcaster()
             pub = rospy.Publisher(frame, geometry_msgs.msg.QuaternionStamped, queue_size = 100)
@@ -99,6 +99,7 @@ while not rospy.is_shutdown():
                 # g.quaternion.x = quat[0]
                 # g.quaternion.y = quat[1]
                 # g.quaternion.z = quat[2]
+                dv.header.stamp = rospy.Time.now()
                 # g.quaternion.w = quat[3]
                 dv.quat.quaternion.x = quat[0]
                 dv.quat.quaternion.y = quat[1]
