@@ -38,13 +38,13 @@ for d in dongle_list:
             rospy.logerr("Adding publisher for %s : %s", id_, frame)
             rospy.logerr("Battery at %s Percent ", tsa.TSWLSensor.getBatteryPercentRemaining(device))
             br = tf2_ros.TransformBroadcaster()
-            pub = rospy.Publisher(frame, geometry_msgs.msg.QuaternionStamped, queue_size = 100)
-            dv_pub = rospy.Publisher(frame+suffix, dataVec, queue_size = 100)
+            # pub = rospy.Publisher(frame, geometry_msgs.msg.QuaternionStamped, queue_size = 100)
+            dv_pub = rospy.Publisher(frame+suffix, dataVec, queue_size=100)
             broadcasters[frame] = br
-            publishers[frame] = pub
+            # publishers[frame] = pub
             dv_publishers[frame] = dv_pub
-            tsa.TSWLSensor.setStreamingSlots(device, slot0='getTaredOrientationAsQuaternion',\
-            slot1='getAllCorrectedComponentSensorData')
+            tsa.TSWLSensor.setStreamingSlots(device, slot0='getTaredOrientationAsQuaternion',
+                                             slot1='getAllCorrectedComponentSensorData')
 
 t = geometry_msgs.msg.TransformStamped()
 g = geometry_msgs.msg.QuaternionStamped()
@@ -52,8 +52,10 @@ dv = dataVec()
 dev_list = []
 for d in dongle_list:
     for dev in d:
-        dev_list.append(dev)
-  
+        # batch = tsa.TSWLSensor.getStreamingBatch(device)
+        if dev is not None:
+            dev_list.append(dev)
+
 while not rospy.is_shutdown():
     # r.sleep()
     # for d in dongle_list:
@@ -76,15 +78,16 @@ while not rospy.is_shutdown():
             # print full
             # r.sleep()
             batch = tsa.TSWLSensor.getStreamingBatch(device)
-            if batch is not None :
+            # if batch is not None:
+            # quat = batch[0:4]
+            # full = batch[4:]
+            # if (quat is not None)and(full is not None):
+            if batch is not None:
+                # if (batch is not None):
                 quat = batch[0:4]
                 full = batch[4:]
-            if (quat is not None)and(full is not None):
-            # if (batch is not None):
-                # quat = batch[0:4]
-                # full = batch[4:]
                 id_ = str(device)
-                id_ = id[id.find('W'):-1]
+                id_ = id_[id_.find('W'):-1]
                 frame = sensor_table.sensor_table.get(id_)
                 # rospy.logwarn("%s : %s ---> %s",id,frame,quat)
                 # p = publishers.get(frame)
@@ -99,7 +102,8 @@ while not rospy.is_shutdown():
                 # g.quaternion.x = quat[0]
                 # g.quaternion.y = quat[1]
                 # g.quaternion.z = quat[2]
-                dv.header.stamp = rospy.Time.now()
+                # dv.header.stamp = rospy.Time.now()
+                dv.header.stamp = rospy.get_rostime()
                 # g.quaternion.w = quat[3]
                 dv.quat.quaternion.x = quat[0]
                 dv.quat.quaternion.y = quat[1]
@@ -120,7 +124,7 @@ while not rospy.is_shutdown():
                 d.publish(dv)
 
 for d in dongle_list:
-    tsa.TSWLSensor.close(device)
+    tsa.TSDongle.close(d)
 print publishers
 print dv_publishers
 print broadcasters
