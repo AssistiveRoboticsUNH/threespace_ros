@@ -27,6 +27,10 @@ broadcasters = {}
 frame_list = []
 publishers_list = []
 
+if len(dongle_list) == 0:
+    rospy.logerr("No Dongles Found, Exiting")
+    exit()
+
 for d in dongle_list:
     tsa.TSDongle.broadcastSynchronizationPulse(d)
     for device in d:
