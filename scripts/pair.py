@@ -10,8 +10,14 @@ rospy.init_node("pairer")
 
 dng_list = find_dng.returnDev("dng")
 dev_list = find_dng.returnDev("dev")
-if(dng_list==[])or(dev_list==[]):
+if(len(dng_list)==0):
+    rospy.logerr("No dongles found, exiting")
     exit()
+    
+if(len(dev_list)==0):
+    rospy.logerr("No device found, exiting")
+    exit()
+    
 rospy.logwarn(dng_list)
 rospy.logwarn(dev_list)
 d = dng_list[0]
@@ -25,7 +31,8 @@ while wc == None:
         rospy.logwarn("Getting Wireless Channel")
         wc = tsa.TSDongle.getWirelessChannel(d)
     except:
-        pass
+        rospy.logerr("Could not get Wireless Channel, exiting")
+        exit()
 rospy.logerr(wc)
 rospy.logerr(d.wireless_table)
 for dev in dev_list:
@@ -36,13 +43,20 @@ for dev in dev_list:
     if hw_id in d.wireless_table:
         rospy.loginfo("Device already registered with dongle")
     else:
-        rospy.logwarn(tsa.TSWLSensor.getWirelessChannel(dev))
+        rospy.logwarn("Device wireless channel" +str(tsa.TSWLSensor.getWirelessChannel(dev)))
         tsa.TSWLSensor.setWirelessPanID(dev, int(wc))
         tsa.TSWLSensor.setWirelessChannel(dev, int(wc))
-        rospy.logerr(tsa.TSWLSensor.getWirelessChannel(dev))
+        rospy.logerr("Device wireless channel" +str(tsa.TSWLSensor.getWirelessChannel(dev)))
         for i in range(0,15):
-            if(d.wireless_table[i]<100):
+            rospy.logwarn(d.wireless_table[i])
+            if((d.wireless_table[i]<100)or((i>0)and(d.wireless_table[i]==d.wireless_table[i-1]))):
                 rospy.loginfo("Found free spot at [%d]=%d",i ,d.wireless_table[i])
-                tsa.TSDonlge.setSensorToDongle(d, i, hw_id)
-tsa.TSDongle.commitWirelessSettings(d)
+                tsa.TSDongle.setSensorToDongle(d, i, hw_id)
+                tsa.TSDongle.commitWirelessSettings(d)
+                tsa.TSWLSensor.commitWirelessSettings(dev)
+                break
+for d in dng_list:
+    tsa.TSDongle.close(d)
+for dev in dev_list:
+    tsa.TSWLSensor.close(dev)
 rospy.logwarn(d.wireless_table)

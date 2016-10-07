@@ -23,6 +23,9 @@ dongle_list = find_dng.returnDev("dng")
 publishers = {}
 dv_publishers = {}
 broadcasters = {}
+if(len(dongle_list)==0):
+    rospy.logerr("No dongles found, exiting")
+    exit()
 for d in dongle_list:
     tsa.TSDongle.broadcastSynchronizationPulse(d)
     for device in d:
@@ -35,8 +38,8 @@ for d in dongle_list:
             rospy.logerr(id_)
             # rospy.logerr(quat)
             frame = sensor_table.sensor_table.get(id_)
-            rospy.logerr("Adding publisher for %s : %s", id_, frame)
-            rospy.logerr("Battery at %s Percent ", tsa.TSWLSensor.getBatteryPercentRemaining(device))
+            rospy.logwarn("Adding publisher for %s : %s", id_, frame)
+            rospy.logwarn("Battery at %s Percent ", tsa.TSWLSensor.getBatteryPercentRemaining(device))
             br = tf2_ros.TransformBroadcaster()
             # pub = rospy.Publisher(frame, geometry_msgs.msg.QuaternionStamped, queue_size = 100)
             dv_pub = rospy.Publisher(frame+suffix, dataVec, queue_size=100)
