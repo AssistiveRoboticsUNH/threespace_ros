@@ -52,6 +52,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
     FILES
     dataVec.msg
+    ardu_msg.msg
 #   Message1.msg
 #   Message2.msg
 )
@@ -109,7 +110,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES threespace_ros
-#  CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs tf tf2
+ CATKIN_DEPENDS message_runtime std_msgs
 #  DEPENDS system_lib
 )
 
