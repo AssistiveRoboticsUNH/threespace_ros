@@ -1,0 +1,10 @@
+<launch>
+    <node name="live_broadcaster" pkg="threespace_ros" type = "live_broadcaster.py" output = "screen" required = "true">
+        <param name = "rf_n" type="string" value="/r_shoulder_data_vec"/>
+        <param name = "rll_n" type="string" value="/temp_1_data_vec"/>
+        <param name = "rul_n" type="string" value=""/>
+        <param name = "m_n" type="string" value=""/>
+        <param name = "use_gyro_n" type="int" value="1"/>
+        <param name = "use_accel_n" type="int" value="1"/>
+    </node>
+</launch>

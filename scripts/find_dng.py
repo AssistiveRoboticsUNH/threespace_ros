@@ -3,9 +3,9 @@ import time
 import math
 import string
 import rospy
-import threespace_api as tsa
+import threespace as tsa
 import find_ports
-from threespace_api import *
+from threespace import *
 from socket import *
 
 def returnDev(arg):
@@ -53,6 +53,7 @@ def returnDev(arg):
                 sensor = tsa.TSWLSensor(com_port = a_port, baudrate=115200)
                 rospy.logwarn(sensor)
                 hwid = convertString(sensor.f7WriteRead('getSerialNumber'))
+                # dev_list.append(sensor)
                 panid = None
                 channel = None
                 wa = None

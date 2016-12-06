@@ -12,4 +12,12 @@ def findPorts():
             result.append(a_port)
         except serial.SerialException:
             pass
+    temp_list = glob.glob('/dev/ttyUSB[A-Za-z]*')
+    for a_port in temp_list:
+        try:
+            s = serial.Serial(a_port)
+            s.close()
+            result.append(a_port)
+        except serial.SerialException:
+            pass
     return result

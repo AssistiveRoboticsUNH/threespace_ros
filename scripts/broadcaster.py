@@ -11,8 +11,8 @@ import string
 import glob
 import sensor_table
 import find_dng
-import threespace_api as tsa
-from threespace_api import *
+import threespace as tsa
+from threespace import *
 from socket import *
 from threespace_ros.msg import dataVec
 
