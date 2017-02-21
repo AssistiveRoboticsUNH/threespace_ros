@@ -38,12 +38,12 @@ class SinglePublisher:
             if lower_topic == 'none':
                 rospy.logerr('No topic for lower joint found')
             else:
-                joints[lower_topic] = ThreeJoint('lower', joints.get(upper_topic).child, 0.30)
+                joints[lower_topic] = ThreeJoint('lower', joints.get(upper_topic), 0.30)
                 hand_topic = rospy.get_param('hand', 'none')
                 if hand_topic == 'none':
                     rospy.logerr('No topic for hand joint found')
                 else:
-                    joints[hand_topic] = ThreeJoint('hand', joints.get(lower_topic).child, 0.05)
+                    joints[hand_topic] = ThreeJoint('hand', joints.get(lower_topic), 0.05)
 
         # frame_ids = {'upper': 'upper',
         #              'lower': 'lower',
@@ -137,36 +137,36 @@ class SinglePublisher:
                         t.header.frame_id = joints.get(frame).parent
                         t2.header.frame_id = joints.get(frame).parent
                         t.child_frame_id = joints.get(frame).name
-                        t2.child_frame_id = joints.get(frame).child
+                        t2.child_frame_id = joints.get(frame).name+'2'
                         t.transform.rotation = dv.quat.quaternion
-                        (yaw, roll, pitch) = tf.transformations.euler_from_quaternion(
+                        (yaw, pitch, roll) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
                              t.transform.rotation.y,
                              t.transform.rotation.z,
                              t.transform.rotation.w])
+
                         if joints.get(frame).set is False:
                             joints.get(frame).yaw = yaw
                             joints.get(frame).pitch = pitch
                             joints.get(frame).roll = roll
                             joints.get(frame).set = True
-                        roll = roll - joints.get(frame).roll
-                        pitch = pitch - joints.get(frame).pitch
-                        yaw = yaw - joints.get(frame).yaw
+
+                        joints.get(frame).roll = roll - joints.get(frame).roll
+                        joints.get(frame).pitch = pitch - joints.get(frame).pitch
+                        joints.get(frame).yaw = yaw - joints.get(frame).yaw
+
+                        if joints.get(frame).parent != 'world':
+                            joints.get(frame).roll = joints.get(frame).roll - joints.get(joints.get(frame).parent).roll
+                            joints.get(frame).yaw = joints.get(frame).yaw - joints.get(joints.get(frame).parent).yaw
+                            joints.get(frame).pitch = joints.get(frame).pitch - joints.get(joints.get(frame).parent).pitch
 
                         t2.transform.rotation = t.transform.rotation
-                        t.transform.translation.x = joints.get(frame).radius * math.sin(pitch) * math.cos(yaw)
-                        t.transform.translation.y = joints.get(frame).radius * math.sin(pitch) * math.sin(yaw)
-                        t.transform.translation.z = joints.get(frame).radius * math.cos(yaw)
-                        t2.transform.translation.x = joints.get(frame).radius * 2 * math.sin(pitch) * math.cos(yaw)
-                        t2.transform.translation.y = joints.get(frame).radius * 2 * math.sin(pitch) * math.sin(yaw)
-                        t2.transform.translation.z = joints.get(frame).radius * 2 * math.cos(yaw)
-
-                        # t.transform.translation.x = radii.get(indexes.get(frame)) * math.sin(y) * math.cos(p)
-                        # t.transform.translation.y = radii.get(indexes.get(frame)) * math.sin(y) * math.sin(p)
-                        # t.transform.translation.z = radii.get(indexes.get(frame)) * math.cos(p)
-                        # t2.transform.translation.x = radii.get(indexes.get(frame)) * 2 * math.sin(y) * math.cos(p)
-                        # t2.transform.translation.y = radii.get(indexes.get(frame)) * 2 * math.sin(y) * math.sin(p)
-                        # t2.transform.translation.z = radii.get(indexes.get(frame)) * 2 * math.cos(p)
+                        t.transform.translation.x = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.cos(joints.get(frame).yaw)
+                        t.transform.translation.y = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.sin(joints.get(frame).yaw)
+                        t.transform.translation.z = joints.get(frame).radius * math.cos(joints.get(frame).yaw)
+                        t2.transform.translation.x = joints.get(frame).radius * 2 * math.sin(joints.get(frame).pitch) * math.cos(joints.get(frame).yaw)
+                        t2.transform.translation.y = joints.get(frame).radius * 2 * math.sin(joints.get(frame).pitch) * math.sin(joints.get(frame).yaw)
+                        t2.transform.translation.z = joints.get(frame).radius * 2 * math.cos(joints.get(frame).yaw)
 
                         br = tf2_ros.TransformBroadcaster()
                         br2 = tf2_ros.TransformBroadcaster()

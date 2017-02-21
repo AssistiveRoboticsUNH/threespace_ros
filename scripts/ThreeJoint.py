@@ -14,3 +14,6 @@ class ThreeJoint:
         self.yaw = 0.0
         self.pitch = 0.0
         self.roll = 0.0
+        self.parentYaw = 0.0
+        self.parentPitch = 0.0
+        self.parentRoll = 0.0
