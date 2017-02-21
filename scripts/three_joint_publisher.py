@@ -111,11 +111,13 @@ class SinglePublisher:
                     batch = tsa.TSWLSensor.getStreamingBatch(device)
                     if batch is not None:
                         # print(batch)
+                        frame = sensor_table.sensor_table.get(id_)
+                        if joints.get(frame)==None:
+                            continue
                         quat = batch[0:4]
                         full = batch[4:]
                         id_ = str(device)
                         id_ = id_[id_.find('W'):-1]
-                        frame = sensor_table.sensor_table.get(id_)
                         dp = dv_publishers.get(frame)
                         b = broadcasters.get(frame)
                         dv.header.stamp = rospy.get_rostime()
