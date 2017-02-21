@@ -191,7 +191,7 @@ class SinglePublisher:
                         # br2 = tf2_ros.TransformBroadcaster()
 
                         br.sendTransform(t)
-                        br2.sendTransform(t2)
+                        # br2.sendTransform(t2)
                         dp.publish(dv)
                     else:
                         # rospy.logerr("None")
