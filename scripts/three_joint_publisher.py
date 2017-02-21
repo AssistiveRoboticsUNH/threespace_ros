@@ -27,7 +27,7 @@ class SinglePublisher:
         dv_publishers = {}
         broadcasters = {}
         upper_topic = rospy.get_param('~upper', 'none')
-        rospy.logerr('upper_topic')
+        rospy.logerr(upper_topic)
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
         lower_topic = rospy.get_param('~lower', 'none')
