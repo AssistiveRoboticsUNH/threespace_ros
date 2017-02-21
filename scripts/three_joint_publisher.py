@@ -156,9 +156,9 @@ class SinglePublisher:
                         joints.get(frame).yaw = yaw - joints.get(frame).yaw
 
                         if joints.get(frame).parent != 'world':
-                            joints.get(frame).roll = joints.get(frame).roll - joints.get(joints.get(frame).parent).roll
-                            joints.get(frame).yaw = joints.get(frame).yaw - joints.get(joints.get(frame).parent).yaw
-                            joints.get(frame).pitch = joints.get(frame).pitch - joints.get(
+                            joints.get(frame).roll = joints.get(frame).roll + joints.get(joints.get(frame).parent).roll
+                            joints.get(frame).yaw = joints.get(frame).yaw + joints.get(joints.get(frame).parent).yaw
+                            joints.get(frame).pitch = joints.get(frame).pitch + joints.get(
                                 joints.get(frame).parent).pitch
 
                         t2.transform.rotation = t.transform.rotation
