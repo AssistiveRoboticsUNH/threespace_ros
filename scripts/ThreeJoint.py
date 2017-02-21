@@ -1,4 +1,4 @@
-class Joint:
+class ThreeJoint:
     def __init__(self, name, parent, radius):
         self.name = name
         self.parent = parent
