@@ -134,10 +134,10 @@ class SinglePublisher:
                         dv.comZ = full[8]
                         t.header.stamp = rospy.Time.now()
                         t2.header.stamp = rospy.Time.now()
-                        t.header.frame_id = joints.get(frame).name
-                        t2.header.frame_id = joints.get(frame).name+'2'
-                        t.child_frame_id = joints.get(frame).parent
-                        t2.child_frame_id = joints.get(frame).parent
+                        t.header.frame_id = joints.get(frame).parent
+                        t2.header.frame_id = joints.get(frame).parent
+                        t.child_frame_id = joints.get(frame).name
+                        t2.child_frame_id = joints.get(frame).name + '2'
                         t.transform.rotation = dv.quat.quaternion
                         (yaw, pitch, roll) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
@@ -188,7 +188,7 @@ class SinglePublisher:
                         # t2.transform.translation.z = joints.get(frame).radius * 2 * math.cos(joints.get(frame).yaw)
 
                         br = tf2_ros.TransformBroadcaster()
-                        br2 = tf2_ros.TransformBroadcaster()
+                        # br2 = tf2_ros.TransformBroadcaster()
 
                         br.sendTransform(t)
                         br2.sendTransform(t2)
