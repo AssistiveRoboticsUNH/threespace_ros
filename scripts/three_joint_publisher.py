@@ -27,12 +27,6 @@ class SinglePublisher:
         dv_publishers = {}
         broadcasters = {}
         upper_topic = rospy.get_param('~upper', 'none')
-
-        SHOULDER_TO_UPPER = 0.25
-        UPPER_TO_ELBOW = 0.25
-        ELBOW_TO_LOWER = 0.25
-        LOWER_TO_WRIST = 0.25
-        WRIST_TO_HAND = 0.05
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
         lower_topic = rospy.get_param('~lower', 'none')
@@ -136,11 +130,11 @@ class SinglePublisher:
                         t.transform.translation.x = radii.get(frame) * math.sin(p) * math.cos(y)
                         t.transform.translation.y = radii.get(frame) * math.sin(p) * math.sin(y)
                         t.transform.translation.z = radii.get(frame) * math.cos(y)
-                        t.transform.translation.x = radii.get(frame) * 2 * math.sin(p) * math.cos(y)
-                        t.transform.translation.y = radii.get(frame) * 2 * math.sin(p) * math.sin(y)
-                        t.transform.translation.z = radii.get(frame) * 2 * math.cos(y)
-
+                        t2.transform.translation.x = radii.get(frame) * 2 * math.sin(p) * math.cos(y)
+                        t2.transform.translation.y = radii.get(frame) * 2 * math.sin(p) * math.sin(y)
+                        t2.transform.translation.z = radii.get(frame) * 2 * math.cos(y)
                         b.sendTransform(t)
+                        b.sendTransform(t2)
                         dp.publish(dv)
                     else:
                         # rospy.logerr("None")
