@@ -33,17 +33,17 @@ class SinglePublisher:
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
         else:
-            joints[upper_topic] = ThreeJoint('upper', 'world', 0.30)
+            joints['upper'] = ThreeJoint('upper', 'world', 0.30)
             lower_topic = rospy.get_param('lower', 'none')
             if lower_topic == 'none':
                 rospy.logerr('No topic for lower joint found')
             else:
-                joints[upper_topic] = ThreeJoint('lower', joints.get('upper').child, 0.30)
+                joints['lower'] = ThreeJoint('lower', joints.get('upper').child, 0.30)
                 hand_topic = rospy.get_param('hand', 'none')
                 if hand_topic == 'none':
                     rospy.logerr('No topic for hand joint found')
                 else:
-                    joints[upper_topic] = ThreeJoint('hand', joints.get('lower').child, 0.05)
+                    joints['hand'] = ThreeJoint('hand', joints.get('lower').child, 0.05)
 
         # frame_ids = {'upper': 'upper',
         #              'lower': 'lower',
