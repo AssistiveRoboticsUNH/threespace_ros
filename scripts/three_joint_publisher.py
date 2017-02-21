@@ -139,7 +139,7 @@ class SinglePublisher:
                         t.child_frame_id = joints.get(frame).name
                         t2.child_frame_id = joints.get(frame).child
                         t.transform.rotation = dv.quat.quaternion
-                        (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(
+                        (yaw, pitch, roll) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
                              t.transform.rotation.y,
                              t.transform.rotation.z,
