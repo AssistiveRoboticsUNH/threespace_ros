@@ -46,6 +46,11 @@ class SinglePublisher:
             'lower': 0.25,
             'hand': 0.05
         }
+        indexes = {
+            upper_topic: 'upper',
+            lower_topic: 'lower',
+            hand_topic: 'hand'
+        }
         if len(dongle_list) == 0:
             rospy.logerr("No dongles found, exiting")
             exit()
@@ -113,10 +118,10 @@ class SinglePublisher:
                         dv.comZ = full[8]
                         t.header.stamp = rospy.Time.now()
                         t2.header.stamp = rospy.Time.now()
-                        t.header.frame_id = parent_frames.get(frame)
-                        t2.header.frame_id = parent_frames.get(frame)
-                        t.child_frame_id = frame_ids.get(frame)
-                        t2.child_frame_id = frame_ids.get(frame) + '2'
+                        t.header.frame_id = parent_frames.get(indexes.get(frame))
+                        t2.header.frame_id = parent_frames.get(indexes.get(frame))
+                        t.child_frame_id = frame_ids.get(indexes.get(frame))
+                        t2.child_frame_id = frame_ids.get(indexes.get(frame)) + '2'
                         t.transform.translation.x = 0.0
                         t.transform.translation.y = 0.0
                         t.transform.translation.z = 0.0
