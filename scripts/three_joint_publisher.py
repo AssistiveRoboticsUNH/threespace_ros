@@ -40,8 +40,8 @@ class SinglePublisher:
                      'lower': 'lower',
                      'hand': 'hand'}
         parent_frames = {'upper': 'world',
-                         'lower': 'upper',
-                         'hand': 'lower'}
+                         'lower': 'upper2',
+                         'hand': 'lower2'}
         radii = {
             'upper': 0.25,
             'lower': 0.25,
@@ -129,7 +129,7 @@ class SinglePublisher:
                              t.transform.rotation.y,
                              t.transform.rotation.z,
                              t.transform.rotation.w])
-                        t2.transform = t.transform
+                        t2.transform.rotation = t.transform.rotation
                         t.transform.translation.x = radii.get(indexes.get(frame)) * math.sin(p) * math.cos(y)
                         t.transform.translation.y = radii.get(indexes.get(frame)) * math.sin(p) * math.sin(y)
                         t.transform.translation.z = radii.get(indexes.get(frame)) * math.cos(y)
