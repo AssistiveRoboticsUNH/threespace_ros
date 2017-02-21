@@ -155,11 +155,11 @@ class SinglePublisher:
 
                         t2.transform.rotation = t.transform.rotation
                         t.transform.translation.x = joints.get(frame).radius * math.sin(pitch) * math.cos(yaw)
-                        t.transform.translation.y = joints.get(frame).radius * math.sin(pitch) * math.sin(yaw)
-                        t.transform.translation.z = joints.get(frame).radius * math.cos(yaw)
+                        t.transform.translation.z = joints.get(frame).radius * math.sin(pitch) * math.sin(yaw)
+                        t.transform.translation.y = joints.get(frame).radius * math.cos(yaw)
                         t2.transform.translation.x = joints.get(frame).radius * 2 * math.sin(pitch) * math.cos(yaw)
-                        t2.transform.translation.y = joints.get(frame).radius * 2 * math.sin(pitch) * math.sin(yaw)
-                        t2.transform.translation.z = joints.get(frame).radius * 2 * math.cos(yaw)
+                        t2.transform.translation.z = joints.get(frame).radius * 2 * math.sin(pitch) * math.sin(yaw)
+                        t2.transform.translation.y = joints.get(frame).radius * 2 * math.cos(yaw)
 
                         # t.transform.translation.x = radii.get(indexes.get(frame)) * math.sin(y) * math.cos(p)
                         # t.transform.translation.y = radii.get(indexes.get(frame)) * math.sin(y) * math.sin(p)
