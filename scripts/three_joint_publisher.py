@@ -117,7 +117,6 @@ class SinglePublisher:
                         id_ = str(device)
                         id_ = id_[id_.find('W'):-1]
                         dp = dv_publishers.get(frame)
-                        b = broadcasters.get(frame)
                         dv.header.stamp = rospy.get_rostime()
                         dv.quat.quaternion.x = -quat[2]
                         dv.quat.quaternion.y = quat[0]
@@ -135,10 +134,10 @@ class SinglePublisher:
                         dv.comZ = full[8]
                         t.header.stamp = rospy.Time.now()
                         t2.header.stamp = rospy.Time.now()
-                        t.header.frame_id = joints.get(frame).parent
-                        t2.header.frame_id = joints.get(frame).parent
-                        t.child_frame_id = joints.get(frame).name
-                        t2.child_frame_id = joints.get(frame).name + '2'
+                        t.header.frame_id = joints.get(frame).name
+                        t2.header.frame_id = joints.get(frame).name+'2'
+                        t.child_frame_id = joints.get(frame).parent
+                        t2.child_frame_id = joints.get(frame).parent
                         t.transform.rotation = dv.quat.quaternion
                         (yaw, pitch, roll) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
