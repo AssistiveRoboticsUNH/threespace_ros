@@ -11,6 +11,7 @@ import string
 import glob
 import sensor_table
 import find_dng
+import Joint
 import threespace as tsa
 from threespace import *
 from socket import *
@@ -28,30 +29,49 @@ class SinglePublisher:
         broadcasters = {}
         upper_topic = rospy.get_param('upper', 'none')
         rospy.logerr(upper_topic)
+        joints = {}
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
-        lower_topic = rospy.get_param('lower', 'none')
-        if lower_topic == 'none':
-            rospy.logerr('No topic for lower joint found, exiting')
-        hand_topic = rospy.get_param('hand', 'none')
-        if hand_topic == 'none':
-            rospy.logerr('No topic for hand joint found, exiting')
-        frame_ids = {'upper': 'upper',
-                     'lower': 'lower',
-                     'hand': 'hand'}
-        parent_frames = {'upper': 'world',
-                         'lower': 'upper2',
-                         'hand': 'lower2'}
-        radii = {
-            'upper': 0.25,
-            'lower': 0.25,
-            'hand': 0.05
-        }
-        indexes = {
-            upper_topic: 'upper',
-            lower_topic: 'lower',
-            hand_topic: 'hand'
-        }
+        else:
+            joints[upper_topic] = Joint('upper', 'world', 0.30)
+            lower_topic = rospy.get_param('lower', 'none')
+            if lower_topic == 'none':
+                rospy.logerr('No topic for lower joint found')
+            else:
+                joints[upper_topic] = Joint('lower', joints.get('upper').child, 0.30)
+                hand_topic = rospy.get_param('hand', 'none')
+                if hand_topic == 'none':
+                    rospy.logerr('No topic for hand joint found')
+                else:
+                    joints[upper_topic] = Joint('hand', joints.get('lower').child, 0.05)
+
+        # frame_ids = {'upper': 'upper',
+        #              'lower': 'lower',
+        #              'hand': 'hand'}
+        # parent_frames = {'upper': 'world',
+        #                  'lower': 'upper2',
+        #                  'hand': 'lower2'}
+        # radii = {
+        #     'upper': 0.25,
+        #     'lower': 0.25,
+        #     'hand': 0.05
+        # }
+        # indexes = {
+        #     upper_topic: 'upper',
+        #     lower_topic: 'lower',
+        #     hand_topic: 'hand'
+        # }
+        # previous = {
+        #     'upper': [0, 0, 0],
+        #     'lower': [0, 0, 0],
+        #     'hand': [0, 0, 0]
+        # }
+        # calibrated = {
+        #     'upper': False,
+        #     'lower': False,
+        #     'hand': False
+        # }
+
         if len(dongle_list) == 0:
             rospy.logerr("No dongles found, exiting")
             exit()
@@ -61,19 +81,15 @@ class SinglePublisher:
                 if device is None:
                     rospy.logerr("No Sensor Found")
                 else:
-                    # quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
                     id_ = str(device)
                     id_ = id_[id_.find('W'):-1]
                     rospy.logerr(id_)
-                    # rospy.logerr(quat)
                     frame = sensor_table.sensor_table.get(id_)
                     rospy.logwarn("Adding publisher for %s : %s", id_, frame)
                     rospy.logwarn("Battery at %s Percent ", tsa.TSWLSensor.getBatteryPercentRemaining(device))
                     br = tf2_ros.TransformBroadcaster()
-                    # pub = rospy.Publisher(frame, geometry_msgs.msg.QuaternionStamped, queue_size = 100)
                     dv_pub = rospy.Publisher(frame + suffix, dataVec, queue_size=100)
                     broadcasters[frame] = br
-                    # publishers[frame] = pub
                     dv_publishers[frame] = dv_pub
                     tsa.TSWLSensor.setStreamingSlots(device, slot0='getTaredOrientationAsQuaternion',
                                                      slot1='getAllCorrectedComponentSensorData')
@@ -84,7 +100,6 @@ class SinglePublisher:
         dev_list = []
         for d in dongle_list:
             for dev in d:
-                # batch = tsa.TSWLSensor.getStreamingBatch(device)
                 if dev is not None:
                     dev_list.append(dev)
 
@@ -119,23 +134,32 @@ class SinglePublisher:
                         dv.comZ = full[8]
                         t.header.stamp = rospy.Time.now()
                         t2.header.stamp = rospy.Time.now()
-                        t.header.frame_id = parent_frames.get(indexes.get(frame))
-                        t2.header.frame_id = parent_frames.get(indexes.get(frame))
-                        t.child_frame_id = frame_ids.get(indexes.get(frame))
-                        t2.child_frame_id = frame_ids.get(indexes.get(frame)) + '2'
+                        t.header.frame_id = joints.get(frame).parent
+                        t2.header.frame_id = joints.get(frame).parent
+                        t.child_frame_id = joints.get(frame).name
+                        t2.child_frame_id = joints.get(frame).child
                         t.transform.rotation = dv.quat.quaternion
-                        (r, p, y) = tf.transformations.euler_from_quaternion(
+                        (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
                              t.transform.rotation.y,
                              t.transform.rotation.z,
                              t.transform.rotation.w])
+                        if joints.get(frame).set is False:
+                            joints.get(frame).yaw = yaw
+                            joints.get(frame).pitch = pitch
+                            joints.get(frame).roll = roll
+                            joints.get(frame).set = True
+                        roll = roll - joints.get(frame).roll
+                        pitch = pitch - joints.get(frame).pitch
+                        yaw = yaw - joints.get(frame).yaw
+
                         t2.transform.rotation = t.transform.rotation
-                        t.transform.translation.x = radii.get(indexes.get(frame)) * math.sin(p) * math.cos(y)
-                        t.transform.translation.y = radii.get(indexes.get(frame)) * math.sin(p) * math.sin(y)
-                        t.transform.translation.z = radii.get(indexes.get(frame)) * math.cos(y)
-                        t2.transform.translation.x = radii.get(indexes.get(frame)) * 2 * math.sin(p) * math.cos(y)
-                        t2.transform.translation.y = radii.get(indexes.get(frame)) * 2 * math.sin(p) * math.sin(y)
-                        t2.transform.translation.z = radii.get(indexes.get(frame)) * 2 * math.cos(y)
+                        t.transform.translation.x = joints.get(frame).radius * math.sin(pitch) * math.cos(yaw)
+                        t.transform.translation.y = joints.get(frame).radius * math.sin(pitch) * math.sin(yaw)
+                        t.transform.translation.z = joints.get(frame).radius * math.cos(yaw)
+                        t2.transform.translation.x = joints.get(frame).radius * 2 * math.sin(pitch) * math.cos(yaw)
+                        t2.transform.translation.y = joints.get(frame).radius * 2 * math.sin(pitch) * math.sin(yaw)
+                        t2.transform.translation.z = joints.get(frame).radius * 2 * math.cos(yaw)
 
                         # t.transform.translation.x = radii.get(indexes.get(frame)) * math.sin(y) * math.cos(p)
                         # t.transform.translation.y = radii.get(indexes.get(frame)) * math.sin(y) * math.sin(p)
