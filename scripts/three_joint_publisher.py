@@ -11,9 +11,9 @@ import string
 import glob
 import sensor_table
 import find_dng
-import ThreeJoint
 import threespace as tsa
 from threespace import *
+from ThreeJoint import ThreeJoint
 from socket import *
 from threespace_ros.msg import dataVec
 
