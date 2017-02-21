@@ -146,15 +146,15 @@ class SinglePublisher:
                              t.transform.rotation.z,
                              t.transform.rotation.w])
 
-                        if joints.get(frame).set is False:
-                            joints.get(frame).yaw = yaw
-                            joints.get(frame).pitch = pitch
-                            joints.get(frame).roll = roll
-                            joints.get(frame).set = True
+                        # if joints.get(frame).set is False:
+                        joints.get(frame).yaw = yaw
+                        joints.get(frame).pitch = pitch
+                        joints.get(frame).roll = roll
+                        joints.get(frame).set = True
 
-                        joints.get(frame).roll = roll - joints.get(frame).roll
-                        joints.get(frame).pitch = pitch - joints.get(frame).pitch
-                        joints.get(frame).yaw = yaw - joints.get(frame).yaw
+                        # joints.get(frame).roll = roll - joints.get(frame).roll
+                        # joints.get(frame).pitch = pitch - joints.get(frame).pitch
+                        # joints.get(frame).yaw = yaw - joints.get(frame).yaw
 
                         if joints.get(frame).parent != 'world':
                             joints.get(frame).roll = joints.get(frame).roll + joints.get(joints.get(frame).parent).roll
