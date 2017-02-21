@@ -166,7 +166,7 @@ class SinglePublisher:
                             joints.get(frame).yaw)
                         joints.get(frame).y = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.sin(
                             joints.get(frame).yaw)
-                        joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).yaw)
+                        joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
                         # rospy.logerr(str(joints.get(frame).x)+" "+str(joints.get(frame).y)+" "+str(joints.get(frame).z))
                         t.transform.translation.x = joints.get(frame).x
