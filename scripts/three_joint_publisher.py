@@ -120,12 +120,9 @@ class SinglePublisher:
                         t.header.stamp = rospy.Time.now()
                         t2.header.stamp = rospy.Time.now()
                         t.header.frame_id = parent_frames.get(indexes.get(frame))
-                        t2.header.frame_id = frame_ids.get(indexes.get(frame))
+                        t2.header.frame_id = parent_frames.get(indexes.get(frame))
                         t.child_frame_id = frame_ids.get(indexes.get(frame))
                         t2.child_frame_id = frame_ids.get(indexes.get(frame)) + '2'
-                        t.transform.translation.x = 0.0
-                        t.transform.translation.y = 0.0
-                        t.transform.translation.z = 0.0
                         t.transform.rotation = dv.quat.quaternion
                         (r, p, y) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
@@ -136,11 +133,14 @@ class SinglePublisher:
                         t.transform.translation.x = radii.get(indexes.get(frame)) * math.sin(p) * math.cos(y)
                         t.transform.translation.y = radii.get(indexes.get(frame)) * math.sin(p) * math.sin(y)
                         t.transform.translation.z = radii.get(indexes.get(frame)) * math.cos(y)
-                        t2.transform.translation.x = radii.get(indexes.get(frame)) * 10 * math.sin(p) * math.cos(y)
-                        t2.transform.translation.y = radii.get(indexes.get(frame)) * 10 * math.sin(p) * math.sin(y)
-                        t2.transform.translation.z = radii.get(indexes.get(frame)) * 10 * math.cos(y)
-                        b.sendTransform(t)
-                        b.sendTransform(t2)
+                        t2.transform.translation.x = radii.get(indexes.get(frame)) * 2 * math.sin(p) * math.cos(y)
+                        t2.transform.translation.y = radii.get(indexes.get(frame)) * 2 * math.sin(p) * math.sin(y)
+                        t2.transform.translation.z = radii.get(indexes.get(frame)) * 2 * math.cos(y)
+                        br = tf2_ros.TransformBroadcaster()
+                        br2 = tf2_ros.TransformBroadcaster()
+
+                        br.sendTransform(t)
+                        br2.sendTransform(t2)
                         dp.publish(dv)
                     else:
                         # rospy.logerr("None")
