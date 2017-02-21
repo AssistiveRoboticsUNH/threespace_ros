@@ -161,20 +161,20 @@ class SinglePublisher:
                             joints.get(frame).pitch = joints.get(frame).pitch + joints.get(
                                 joints.get(frame).parent).pitch
 
-                        t2.transform.rotation = t.transform.rotation
-                        joints.get(frame).x = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.sin(
-                            joints.get(frame).yaw)
-                        joints.get(frame).y = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.cos(
-                            joints.get(frame).yaw)
-                        joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
+                            t2.transform.rotation = t.transform.rotation
+                            joints.get(frame).x = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.sin(
+                                joints.get(frame).yaw)
+                            joints.get(frame).y = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.cos(
+                                joints.get(frame).yaw)
+                            joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
-                        # rospy.logerr(str(joints.get(frame).x)+" "+str(joints.get(frame).y)+" "+str(joints.get(frame).z))
-                        t.transform.translation.x = joints.get(frame).x
-                        t.transform.translation.y = joints.get(frame).y
-                        t.transform.translation.z = joints.get(frame).z
-                        t2.transform.translation.x = joints.get(frame).x * 2
-                        t2.transform.translation.y = joints.get(frame).y * 2
-                        t2.transform.translation.z = joints.get(frame).z * 2
+                            # rospy.logerr(str(joints.get(frame).x)+" "+str(joints.get(frame).y)+" "+str(joints.get(frame).z))
+                            t.transform.translation.x = joints.get(frame).x
+                            t.transform.translation.y = joints.get(frame).y
+                            t.transform.translation.z = joints.get(frame).z
+                            t2.transform.translation.x = joints.get(frame).x * 2
+                            t2.transform.translation.y = joints.get(frame).y * 2
+                            t2.transform.translation.z = joints.get(frame).z * 2
 
                         # t.transform.translation.x = joints.get(frame).radius * math.sin(
                         #     joints.get(frame).pitch) * math.cos(joints.get(frame).yaw)
