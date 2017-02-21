@@ -13,7 +13,7 @@ import sensor_table
 import find_dng
 import threespace as tsa
 from threespace import *
-from ThreeJoint import ThreeJoint
+import ThreeJoint
 from socket import *
 from threespace_ros.msg import dataVec
 
@@ -33,7 +33,7 @@ class SinglePublisher:
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
         else:
-            joints[upper_topic] = ThreeJoint('upper', 'world', 0.30)
+            joints[upper_topic] = ThreeJoint.ThreeJoint('upper', 'world', 0.30)
             lower_topic = rospy.get_param('lower', 'none')
             if lower_topic == 'none':
                 rospy.logerr('No topic for lower joint found')
