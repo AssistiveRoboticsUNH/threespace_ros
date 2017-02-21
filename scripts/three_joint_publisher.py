@@ -26,14 +26,14 @@ class SinglePublisher:
         publishers = {}
         dv_publishers = {}
         broadcasters = {}
-        upper_topic = rospy.get_param('~upper', 'none')
+        upper_topic = rospy.get_param('upper', 'none')
         rospy.logerr(upper_topic)
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
-        lower_topic = rospy.get_param('~lower', 'none')
+        lower_topic = rospy.get_param('lower', 'none')
         if lower_topic == 'none':
             rospy.logerr('No topic for lower joint found, exiting')
-        hand_topic = rospy.get_param('~hand', 'none')
+        hand_topic = rospy.get_param('hand', 'none')
         if hand_topic == 'none':
             rospy.logerr('No topic for hand joint found, exiting')
         frame_ids = {'upper': 'upper',
@@ -133,12 +133,12 @@ class SinglePublisher:
                              t.transform.rotation.z,
                              t.transform.rotation.w])
                         t2.transform = t.transform
-                        t.transform.translation.x = radii.get(frame) * math.sin(p) * math.cos(y)
-                        t.transform.translation.y = radii.get(frame) * math.sin(p) * math.sin(y)
-                        t.transform.translation.z = radii.get(frame) * math.cos(y)
-                        t2.transform.translation.x = radii.get(frame) * 2 * math.sin(p) * math.cos(y)
-                        t2.transform.translation.y = radii.get(frame) * 2 * math.sin(p) * math.sin(y)
-                        t2.transform.translation.z = radii.get(frame) * 2 * math.cos(y)
+                        t.transform.translation.x = radii.get(indexes.get(frame)) * math.sin(p) * math.cos(y)
+                        t.transform.translation.y = radii.get(indexes.get(frame)) * math.sin(p) * math.sin(y)
+                        t.transform.translation.z = radii.get(indexes.get(frame)) * math.cos(y)
+                        t2.transform.translation.x = radii.get(indexes.get(frame)) * 2 * math.sin(p) * math.cos(y)
+                        t2.transform.translation.y = radii.get(indexes.get(frame)) * 2 * math.sin(p) * math.sin(y)
+                        t2.transform.translation.z = radii.get(indexes.get(frame)) * 2 * math.cos(y)
                         b.sendTransform(t)
                         b.sendTransform(t2)
                         dp.publish(dv)
