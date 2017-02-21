@@ -41,30 +41,46 @@ def imuCallback(msg, args):
         self.imuVec[startIndex + currentIndex] = msg.accY
         currentIndex += 1
         self.imuVec[startIndex + currentIndex] = msg.accZ
-    # print currentIndex + startIndex
-    # print("---------------------------------")
+        # print currentIndex + startIndex
+        # print("---------------------------------")
 
 
 def arduCallback(msg, args):
     self = args[0]
+    pos = self.imuCount * (3 * self.useGyro + 3 * self.useAccel)
+    # print msg
+    # print('-------------')
+    # print pos
+    self.refresh = True
     if self.ir == 1:
-        self.arVec[0] = msg.ir
+        self.imuVec[pos] = msg.ir
     if self.prox == 1:
-        self.arVec[0 + self.ir] = msg.prox
+        self.imuVec[pos + self.ir] = msg.prox
     if self.fsr == 1:
-        self.arVec[self.ir + self.prox] = msg.fsrfl
-        self.arVec[self.ir + self.prox + 1] = msg.fsrfr
-        self.arVec[self.ir + self.prox + 2] = msg.fsrbk
+        self.imuVec[pos + self.ir + self.prox] = msg.fsrfl
+        self.imuVec[pos + self.ir + self.prox + 1] = msg.fsrfr
+        self.imuVec[pos + self.ir + self.prox + 2] = msg.fsrbk
     pass
 
 
 class LiveBroadcaster:
-
     def createArray(self):
         pass
 
     def __init__(self, acb=arduCallback, imc=imuCallback):
         rospy.init_node('liveBroadCaster')
+        self.port = rospy.get_param("~port_live", "/dev/ttyACM0")
+        PORT = self.port
+        BAUD_RATE = 9600
+        while True:
+            try:
+                print("Trying to bind port " + PORT)
+                ser = serial.Serial(PORT, BAUD_RATE)
+                break
+            except:
+                rospy.sleep(1)
+                continue
+
         self.acb = acb
         self.imc = imc
 
@@ -77,8 +93,15 @@ class LiveBroadcaster:
         self.useGyro = rospy.get_param("~use_gyro_n", 0)
         self.useAccel = rospy.get_param("~use_accel_n", 0)
         self.fsr = rospy.get_param("~fsr_n", 1)
-        self.ir = rospy.get_param("ir_n", 1)
+        self.ir = rospy.get_param("~ir_n", 1)
         self.prox = rospy.get_param("~prox_n", 1)
+
+        print 'Use Gyro: ' + str(self.useGyro)
+        print 'Use Accell: ' + str(self.useAccel)
+        print 'Use Fsr: ' + str(self.fsr)
+        print 'Use IR: ' + str(self.ir)
+        print 'Use prox: ' + str(self.prox)
+
         self.imuCount = 0
         self.rfIndex = 0
         self.rllIndex = 0
@@ -116,42 +139,58 @@ class LiveBroadcaster:
             mSub = rospy.Subscriber(self.m, dataVec, self.imc, callback_args=(self, self.mIndex, self.m))
             self.imuCount += 1
 
-        arduinoSub = rospy.Subscriber('arduino', ardu_msg, self.acb, callback_args=self)
+        arduinoSub = rospy.Subscriber('arduino', ardu_msg, self.acb, callback_args=(self, self.mIndex))
 
-        size = self.imuCount*(3*self.useAccel + 3*self.useGyro) + self.fsr + self.ir + self.prox
+        size = self.imuCount * (3 * self.useAccel + 3 * self.useGyro) + 3 * self.fsr + self.ir + self.prox
         self.imuVec = [-1337.1337 for i in range(0, size)]
         self.minVec = [0.0 for i in range(0, size)]
         self.maxVec = [0.0 for i in range(0, size)]
         self.avgVec = []
 
+        print self.rf
+        print self.rll
+        print self.rul
+        print self.m
+        print self.imuCount
+        print size
+        self.window = 1
         matlabInput = collections.deque(maxlen=self.window)
+        gaitPhaseInput = collections.deque(maxlen=self.window)
         minMaxFound = False
 
         eng = matlab.engine.start_matlab()
-        eng.load('~/full_data/trained_wss/subject3/GyroAccel/normal/subject3_gyro_accel'
-                 '_fsr_prox_btr_bte_rf_rul_m_full_data_normalized_workspace.mat', nargout=0)
+        eng.load('~/subject1_best.mat', nargout=0)
         eng.cd('~/ros_ws/src/threespace_ros/scripts')
+        print('Starting in 3 seconds')
+        rospy.sleep(3)
 
         testVec = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                    0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                   0.0, 0.0, 0.0, 0.0, 0.0]
+                   0.0, 0.0, 0.0, 0.0]
 
         # x = float(eng.evalfis(testVec, eng.an1, nargout=1, stdout=out, stderr=err))
         # eng.edit('triarea', nargout=0)
 
-        x = eng.live_classifier(testVec, nargout=1)
-
+        # x = eng.live_classifier(testVec, nargout=1)
         startTime = rospy.Time.now()
         r = rospy.Rate(100)
-        d = rospy.Duration(0.2, 0)
+        d = rospy.Duration(0.1, 0)
         self.refresh = False
-        trainDuration = 5
+        trainDuration = 60
+        totalDuration = 180
         while not rospy.is_shutdown():
             # rospy.spin()
+            # print self.imuVec[18], self.imuVec[19], self.imuVec[20]
             loopTime = rospy.Time.now()
-
-            if(loopTime.to_sec() - startTime.to_sec()) > trainDuration:
+            # print(str(loopTime.to_sec()-startTime.to_sec()))
+            if (loopTime.to_sec() - startTime.to_sec()) > trainDuration:
+                # print self.imuVec
+                if (loopTime.to_sec() - startTime.to_sec()) > totalDuration:
+                    rospy.signal_shutdown("That's all folks")
+                    ser.close()
+                    eng.quit()
+                    exit()
                 # make sure we have data from every sensor
                 if -1337.1337 not in self.imuVec:
                     # have we found the limits for every input so far ?
@@ -159,41 +198,85 @@ class LiveBroadcaster:
                         # if we have enough entries to classify (This should not matter
                         # a window of 1 should be fine, but we may want to average
                         # more than one outputs to avoid false classifications)
+                        # print self.window
+                        # print len(matlabInput)
                         if len(matlabInput) < self.window:
                             # normalize the input data and pass it to matlab vector
-                            self.imuVec = (self.imuVec - self.minVec)/(self.maxVec - self.minVec)
-                            matlabInput.append(self.imuVec)
+                            # print self.imuVec
+                            xx = [(self.imuVec[i] - self.minVec[i])/(self.maxVec[i] - self.minVec[i]) for i in range (0, len(self.imuVec))]
+                            # print self.imuVec
+                            # matlabInput.append(self.imuVec[:])
+                            matlabInput.append(xx)
+                            # print matlabInput.pop
+
+                            m = np.array(matlabInput)
+                            print m
+                            # m = np.array(m[:, len(matlabInput) - 2, len(matlabInput) - 3])
+                            # print m
+                            mean_gait_1 = np.mean(m[:, len(matlabInput) - 2])
+                            mean_gait_2 = np.mean(m[:, len(matlabInput) - 3])
+                            gaitPhaseInput.append([0] if ((mean_gait_1 > 0.5) & (mean_gait_2 > 0.5))else [1])
+                            # print np.array(gaitPhaseInput)
                         else:
-                            # matlabInput is a deque so it will automatically
-                            # pop the oldest elements to insert incoming vectors
-                            print matlabInput
+                            xx = [(self.imuVec[i] - self.minVec[i]) / (self.maxVec[i] - self.minVec[i]) for i in
+                                  range(0, len(self.imuVec))]
+                            # print self.imuVec
+                            # matlabInput.append(self.imuVec[:])
+                            matlabInput.append(xx)
+                            # print matlabInput.pop
+
+                            m = np.array(matlabInput)
+                            print m
+                            # m = np.array(m[:, len(matlabInput) - 2, len(matlabInput) - 3])
+                            # print m
+                            mean_gait_1 = np.mean(m[:, len(matlabInput) - 2])
+                            mean_gait_2 = np.mean(m[:, len(matlabInput) - 3])
+                            gaitPhaseInput.append([0] if ((mean_gait_1 > 0.5) & (mean_gait_2 > 0.5))else [1])
+
+
+                            input_vec = np.concatenate((np.array(matlabInput), np.array(gaitPhaseInput)), axis=1)
+                            print('-------------')
+                            ret = eng.live_classifier(input_vec.tolist(), nargout=1)
+                            print self.imuVec
+                            print input_vec
+                            print ret
+                            print('-------------')
+                            ser.flush()
+                            if (ret == 0):
+                                ser.write('N\n')
+                            elif (ret == 1):
+                                ser.write('L\n')
+                            elif (ret == 2):
+                                ser.write('S\n')
+                            elif (ret == 3):
+                                ser.write('E\n')
+                            else:
+                                ser.write('O\n')
+                                ser.close()
+                                eng.quit()
+                                return ()
+
+                            print('-----###---')
+                            rospy.sleep(0.5)
+                            ser.flushInput()
                         continue
                     # if not find min and max values form every input
                     # so we can calculate the average (very sloppy tbh)
                     else:
-                        self.maxVec = np.amax(self.avgVec, axis=0)
-                        self.minVec = np.amin(self.avgVec, axis=0)
-                        self.avgVec.clear()
+                        print self.avgVec
+                        self.maxVec = np.array(self.avgVec).max(axis=0)
+                        print self.maxVec
+                        self.minVec = np.array(self.avgVec).min(axis=0)
+                        print self.minVec
+                        # self.avgVec = []
                         minMaxFound = True
-                print len(self.avgVec)
-                print len(self.avgVec[0])
-                for i in range(len(self.avgVec) - trainDuration, len(self.avgVec)):
-                    print self.avgVec[i][0:6], i
-                    self.maxVec = np.amax(self.avgVec, axis=0)
-                    self.minVec = np.amin(self.avgVec, axis=0)
-                print self.maxVec
-                print self.minVec
-                eng.quit()
-                rospy.signal_shutdown()
-                exit()
             else:
-                if self.refresh:
-                    print self.imuVec[0:6]
-                    self.avgVec.append(self.imuVec[:])
-                    self.refresh = False
+                self.avgVec.append(self.imuVec[:])
+            # print self.avgVec
             # r.sleep()
             rospy.sleep(d)
         eng.quit()
+
 
 if __name__ == '__main__':
     try:

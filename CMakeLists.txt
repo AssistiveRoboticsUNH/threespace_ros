@@ -52,7 +52,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
     FILES
     dataVec.msg
-    ardu_msg.msg
+    # ardu_msg.msg
+    GenericFloatArray.msg
 #   Message1.msg
 #   Message2.msg
 )

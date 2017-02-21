@@ -44,10 +44,10 @@ class SinglePublisher:
                     frame = sensor_table.sensor_table.get(id_)
                     rospy.logwarn("Adding publisher for %s : %s", id_, frame)
                     rospy.logwarn("Battery at %s Percent ", tsa.TSWLSensor.getBatteryPercentRemaining(device))
-                    # br = tf2_ros.TransformBroadcaster()
+                    br = tf2_ros.TransformBroadcaster()
                     # pub = rospy.Publisher(frame, geometry_msgs.msg.QuaternionStamped, queue_size = 100)
                     dv_pub = rospy.Publisher(frame + suffix, dataVec, queue_size=100)
-                    # broadcasters[frame] = br
+                    broadcasters[frame] = br
                     # publishers[frame] = pub
                     dv_publishers[frame] = dv_pub
                     tsa.TSWLSensor.setStreamingSlots(device, slot0='getTaredOrientationAsQuaternion',
@@ -100,22 +100,26 @@ class SinglePublisher:
                         # rospy.logwarn("%s : %s ---> %s", id, frame, full)
                         # p = publishers.get(frame)
                         dp = dv_publishers.get(frame)
-                        # b = broadcasters.get(frame)
-                        # t.header.stamp = rospy.Time.now()
-                        # t.header.frame_id = "world"
-                        # t.child_frame_id = frame
-                        # t.transform.translation.x = 0.0
-                        # t.transform.translation.y = 0.0
-                        # t.transform.translation.z = 0.0
+                        b = broadcasters.get(frame)
+                        t.header.stamp = rospy.Time.now()
+                        t.header.frame_id = "world"
+                        t.child_frame_id = frame
+                        t.transform.translation.x = 0.0
+                        t.transform.translation.y = 0.0
+                        t.transform.translation.z = 0.0
                         # g.quaternion.x = quat[0]
                         # g.quaternion.y = quat[1]
                         # g.quaternion.z = quat[2]
+                        # g.quaternion.w = quat[3]
                         # dv.header.stamp = rospy.Time.now()
                         dv.header.stamp = rospy.get_rostime()
-                        # g.quaternion.w = quat[3]
-                        dv.quat.quaternion.x = quat[0]
-                        dv.quat.quaternion.y = quat[1]
-                        dv.quat.quaternion.z = quat[2]
+                        # dv.quat.quaternion.x = quat[0]
+                        # dv.quat.quaternion.y = quat[1]
+                        # dv.quat.quaternion.z = quat[2]
+                        # dv.quat.quaternion.w = quat[3]
+                        dv.quat.quaternion.x = -quat[2]
+                        dv.quat.quaternion.y = quat[0]
+                        dv.quat.quaternion.z = -quat[1]
                         dv.quat.quaternion.w = quat[3]
                         dv.gyroX = full[0]
                         dv.gyroY = full[1]
@@ -126,12 +130,13 @@ class SinglePublisher:
                         dv.comX = full[6]
                         dv.comY = full[7]
                         dv.comZ = full[8]
-                        # t.transform.rotation = g.quaternion
-                        # b.sendTransform(t)
+                        t.transform.rotation = dv.quat.quaternion
+                        b.sendTransform(t)
                         # p.publish(g)
                         dp.publish(dv)
                     else:
-                        rospy.logerr("None")
+                        # rospy.logerr("None")
+			pass
         for d in dongle_list:
             tsa.TSDongle.close(d)
         print publishers

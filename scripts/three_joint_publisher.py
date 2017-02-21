@@ -122,7 +122,7 @@ class SinglePublisher:
                         t.header.frame_id = parent_frames.get(frame)
                         t2.header.frame_id = parent_frames.get(frame)
                         t.child_frame_id = frame_ids.get(frame)
-                        t2.child_frame_id = frame_ids.get(frame)+'2'
+                        t2.child_frame_id = frame_ids.get(frame) + '2'
                         t.transform.translation.x = 0.0
                         t.transform.translation.y = 0.0
                         t.transform.translation.z = 0.0
@@ -144,7 +144,7 @@ class SinglePublisher:
                         dp.publish(dv)
                     else:
                         # rospy.logerr("None")
-			pass
+                        pass
         for d in dongle_list:
             tsa.TSDongle.close(d)
         print publishers
@@ -152,5 +152,6 @@ class SinglePublisher:
         print broadcasters
         exit()
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     SinglePublisher()
