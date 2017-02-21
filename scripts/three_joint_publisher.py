@@ -120,7 +120,7 @@ class SinglePublisher:
                         t.header.stamp = rospy.Time.now()
                         t2.header.stamp = rospy.Time.now()
                         t.header.frame_id = parent_frames.get(indexes.get(frame))
-                        t2.header.frame_id = parent_frames.get(indexes.get(frame))
+                        t2.header.frame_id = frame_ids.get(indexes.get(frame))
                         t.child_frame_id = frame_ids.get(indexes.get(frame))
                         t2.child_frame_id = frame_ids.get(indexes.get(frame)) + '2'
                         t.transform.translation.x = 0.0
