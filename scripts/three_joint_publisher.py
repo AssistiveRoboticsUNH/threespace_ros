@@ -139,7 +139,7 @@ class SinglePublisher:
                         t.child_frame_id = joints.get(frame).name
                         t2.child_frame_id = joints.get(frame).child
                         t.transform.rotation = dv.quat.quaternion
-                        (yaw, pitch, roll) = tf.transformations.euler_from_quaternion(
+                        (yaw, roll, pitch) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
                              t.transform.rotation.y,
                              t.transform.rotation.z,
@@ -155,11 +155,11 @@ class SinglePublisher:
 
                         t2.transform.rotation = t.transform.rotation
                         t.transform.translation.x = joints.get(frame).radius * math.sin(pitch) * math.cos(yaw)
-                        t.transform.translation.z = joints.get(frame).radius * math.sin(pitch) * math.sin(yaw)
-                        t.transform.translation.y = joints.get(frame).radius * math.cos(yaw)
+                        t.transform.translation.y = joints.get(frame).radius * math.sin(pitch) * math.sin(yaw)
+                        t.transform.translation.z = joints.get(frame).radius * math.cos(yaw)
                         t2.transform.translation.x = joints.get(frame).radius * 2 * math.sin(pitch) * math.cos(yaw)
-                        t2.transform.translation.z = joints.get(frame).radius * 2 * math.sin(pitch) * math.sin(yaw)
-                        t2.transform.translation.y = joints.get(frame).radius * 2 * math.cos(yaw)
+                        t2.transform.translation.y = joints.get(frame).radius * 2 * math.sin(pitch) * math.sin(yaw)
+                        t2.transform.translation.z = joints.get(frame).radius * 2 * math.cos(yaw)
 
                         # t.transform.translation.x = radii.get(indexes.get(frame)) * math.sin(y) * math.cos(p)
                         # t.transform.translation.y = radii.get(indexes.get(frame)) * math.sin(y) * math.sin(p)
