@@ -112,8 +112,6 @@ class SinglePublisher:
                     if batch is not None:
                         # print(batch)
                         frame = sensor_table.sensor_table.get(id_)
-                        if joints.get(frame)==None:
-                            continue
                         quat = batch[0:4]
                         full = batch[4:]
                         id_ = str(device)
@@ -139,7 +137,7 @@ class SinglePublisher:
                         t.header.frame_id = joints.get(frame).parent
                         t2.header.frame_id = joints.get(frame).parent
                         t.child_frame_id = joints.get(frame).name
-                        t2.child_frame_id = joints.get(frame).name+'2'
+                        t2.child_frame_id = joints.get(frame).name + '2'
                         t.transform.rotation = dv.quat.quaternion
                         (yaw, pitch, roll) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
@@ -160,7 +158,8 @@ class SinglePublisher:
                         if joints.get(frame).parent != 'world':
                             joints.get(frame).roll = joints.get(frame).roll - joints.get(joints.get(frame).parent).roll
                             joints.get(frame).yaw = joints.get(frame).yaw - joints.get(joints.get(frame).parent).yaw
-                            joints.get(frame).pitch = joints.get(frame).pitch - joints.get(joints.get(frame).parent).pitch
+                            joints.get(frame).pitch = joints.get(frame).pitch - joints.get(
+                                joints.get(frame).parent).pitch
 
                         t2.transform.rotation = t.transform.rotation
                         joints.get(frame).x = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.cos(
@@ -173,9 +172,9 @@ class SinglePublisher:
                         t.transform.translation.x = joints.get(frame).x
                         t.transform.translation.y = joints.get(frame).y
                         t.transform.translation.z = joints.get(frame).z
-                        t2.transform.translation.x = joints.get(frame).x*2
-                        t2.transform.translation.y = joints.get(frame).y*2
-                        t2.transform.translation.z = joints.get(frame).z*2
+                        t2.transform.translation.x = joints.get(frame).x * 2
+                        t2.transform.translation.y = joints.get(frame).y * 2
+                        t2.transform.translation.z = joints.get(frame).z * 2
 
                         # t.transform.translation.x = joints.get(frame).radius * math.sin(
                         #     joints.get(frame).pitch) * math.cos(joints.get(frame).yaw)
