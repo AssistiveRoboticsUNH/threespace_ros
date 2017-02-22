@@ -154,7 +154,9 @@ class SinglePublisher:
                         if abs(joints.get(frame).yaw - yaw - joints.get(frame).initYaw) > 0.01:
                             joints.get(frame).yaw = yaw - joints.get(frame).initYaw
 
-                        q = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+                        # q = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+                        q = tf.transformations.quaternion_from_euler(joints.get(
+                            frame).roll, joints.get(frame).pitch, joints.get(frame).yaw)
                         msg = geometry_msgs.msg.Quaternion(q[0], q[1], q[2], q[3])
 
                         t.transform.rotation = msg
