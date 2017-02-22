@@ -39,13 +39,13 @@ class SinglePublisher:
             if lower_topic == 'none':
                 rospy.logerr('No topic for lower joint found')
             else:
-                joints[lower_topic] = ThreeJoint('lower', joints.get(upper_topic).name, 0.30)
+                joints[lower_topic] = ThreeJoint('lower', joints.get('upper').name, 0.30)
                 hand_topic = rospy.get_param('hand', 'none')
                 rospy.logerr(hand_topic)
                 if hand_topic == 'none':
                     rospy.logerr('No topic for hand joint found')
                 else:
-                    joints[hand_topic] = ThreeJoint('hand', joints.get(lower_topic).name, 0.05)
+                    joints[hand_topic] = ThreeJoint('hand', joints.get('hand').name, 0.05)
 
         if len(dongle_list) == 0:
             rospy.logerr("No dongles found, exiting")
