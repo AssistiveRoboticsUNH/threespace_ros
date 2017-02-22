@@ -171,7 +171,7 @@ class SinglePublisher:
 
                         joints.get(frame).x = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
-                        joints.get(frame).y = joints.get(frame).radius * math.sin(joints.get(frame).roll) * math.cos(
+                        joints.get(frame).y = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.cos(
                              joints.get(frame).yaw)
 
                         joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
