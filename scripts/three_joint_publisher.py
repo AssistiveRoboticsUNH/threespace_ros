@@ -164,13 +164,13 @@ class SinglePublisher:
 
                             # rospy.logerr(str(joints.get(frame).x)+" "+str(joints.get(frame).y)+" "+str(joints.get(frame).z))
                         else:
-                            t.transform.translation.x = joints.get(frame).radius * 2
+                            t.transform.translation.x = 0
                             t.transform.translation.y = 0
                             t.transform.translation.z = 0
                             t2.transform.translation.x = joints.get(frame).radius
                             t2.transform.translation.y = 0
                             t2.transform.translation.z = 0
-                            t3.transform.translation.x = joints.get(frame).radius * 3
+                            t3.transform.translation.x = joints.get(frame).radius * 2
                             t3.transform.translation.y = 0
                             t3.transform.translation.z = 0
 
