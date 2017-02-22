@@ -143,14 +143,14 @@ class SinglePublisher:
                                 [joints.get(frame).initYaw, joints.get(frame).initPitch, joints.get(frame).initRoll])
                             joints.get(frame).set = True
 
-                        if abs(joints.get(frame).roll - roll - joints.get(frame).initRoll) > 0.1:
+                        if abs(joints.get(frame).roll - roll - joints.get(frame).initRoll) > 0.01:
                             joints.get(frame).roll = roll - joints.get(frame).initRoll
-                        if abs(joints.get(frame).pitch - pitch - joints.get(frame).initPitch) > 0.1:
+                        if abs(joints.get(frame).pitch - pitch - joints.get(frame).initPitch) > 0.01:
                             joints.get(frame).pitch = pitch - joints.get(frame).initPitch
                             rospy.logerr([yaw, pitch, roll])
                             rospy.logerr([joints.get(frame).yaw, joints.get(frame).pitch, joints.get(frame).roll])
                             rospy.logerr("*******************************")
-                        if abs(joints.get(frame).yaw - yaw - joints.get(frame).initYaw) > 0.1:
+                        if abs(joints.get(frame).yaw - yaw - joints.get(frame).initYaw) > 0.01:
                             joints.get(frame).yaw = yaw - joints.get(frame).initYaw
 
                         q = tf.transformations.quaternion_from_euler(yaw, pitch, roll)
