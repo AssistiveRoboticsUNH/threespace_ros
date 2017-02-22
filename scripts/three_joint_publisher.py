@@ -169,7 +169,9 @@ class SinglePublisher:
                         #     joints.get(frame).yaw)
                         # joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
-                        joints.get(frame).x = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
+                        joints.get(frame).x = joints.get(frame).radius * math.cos(joints.get(frame).pitch) * math.sin(
+                            joints.get(frame).yaw
+                        )
 
                         joints.get(frame).y = -joints.get(frame).radius * math.cos(joints.get(frame).pitch) * math.cos(
                              joints.get(frame).yaw)
@@ -177,7 +179,7 @@ class SinglePublisher:
                         joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
                         t.transform.translation.x = joints.get(frame).x * 2
-                        t.transform.translation.y = joints.get(frame).y
+                        t.transform.translation.y = 0
                         t.transform.translation.z = 0
                         t2.transform.translation.x = joints.get(frame).x
                         t2.transform.translation.y = joints.get(frame).y
