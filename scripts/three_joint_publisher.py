@@ -150,12 +150,12 @@ class SinglePublisher:
                             joints.get(frame).pitch = pitch - joints.get(frame).initPitch
                             rospy.logerr([yaw, pitch, roll])
                             rospy.logerr([joints.get(frame).yaw, joints.get(frame).pitch, joints.get(frame).roll])
-                            rospy.logerr("COS :"+str([math.cos(joints.get(frame).yaw),
+                            rospy.logerr([math.cos(joints.get(frame).yaw),
                                                   math.cos(joints.get(frame).pitch),
-                                                  math.cos(joints.get(frame).roll)]))
-                            rospy.logerr("SIN :" + str([math.sin(joints.get(frame).yaw),
+                                                  math.cos(joints.get(frame).roll)])
+                            rospy.logerr([math.sin(joints.get(frame).yaw),
                                                     math.sin(joints.get(frame).pitch),
-                                                    math.sin(joints.get(frame).roll)]))
+                                                    math.sin(joints.get(frame).roll)])
                             rospy.logerr([joints.get(frame).x, joints.get(frame).y, joints.get(frame).z])
                             rospy.logerr("*******************************")
                         if abs(joints.get(frame).yaw - yaw - joints.get(frame).initYaw) > 0.01:
