@@ -141,10 +141,9 @@ class SinglePublisher:
 
                         if joints.get(frame).parent != 'world':
 
-                            joints.get(frame).roll = joints.get(frame).roll + joints.get(joints.get(frame).index).roll
-                            joints.get(frame).yaw = joints.get(frame).yaw + joints.get(joints.get(frame).index).yaw
-                            joints.get(frame).pitch = joints.get(frame).pitch + joints.get(
-                                joints.get(frame).index).pitch
+                            joints.get(frame).roll = joints.get(frame).roll
+                            joints.get(frame).yaw = joints.get(frame).yaw
+                            joints.get(frame).pitch = joints.get(frame).pitch
 
                             joints.get(frame).x = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.sin(
                                 joints.get(frame).yaw)
