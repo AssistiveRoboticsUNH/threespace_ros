@@ -177,7 +177,7 @@ class SinglePublisher:
                         t.transform.translation.y = 0
                         t.transform.translation.z = 0
                         t2.transform.translation.x = joints.get(frame).x
-                        t2.transform.translation.y = 0
+                        t2.transform.translation.y = joints.get(frame).y
                         t2.transform.translation.z = 0
                         t3.transform.translation.x = joints.get(frame).x * 3
                         t3.transform.translation.y = 0
