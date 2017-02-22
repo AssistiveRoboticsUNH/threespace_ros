@@ -135,6 +135,7 @@ class SinglePublisher:
                              t.transform.rotation.w])
                         if yaw == 0.0 or pitch == 0.0 or roll == 0.0:
                             continue
+                        pitch += 1.57079632679
                         if joints.get(frame).set is False:
                             joints.get(frame).initYaw = yaw
                             joints.get(frame).intPitch = pitch
