@@ -138,11 +138,14 @@ class SinglePublisher:
                             joints.get(frame).yaw = yaw
                             joints.get(frame).pitch = pitch
                             joints.get(frame).roll = roll
+                            joints.get(frame).initYaw = yaw
+                            joints.get(frame).intPitch = pitch
+                            joints.get(frame).initRoll = roll
                             joints.get(frame).set = True
 
-                        joints.get(frame).roll = roll - joints.get(frame).roll
-                        joints.get(frame).pitch = pitch - joints.get(frame).pitch
-                        joints.get(frame).yaw = yaw - joints.get(frame).yaw
+                        joints.get(frame).roll = roll - (joints.get(frame).initRoll - joints.get(frame).roll)
+                        joints.get(frame).pitch = pitch - (joints.get(frame).initPitch - joints.get(frame).pitch)
+                        joints.get(frame).yaw = yaw - (joints.get(frame).initYaw - joints.get(frame).yaw)
 
                         rospy.logerr([yaw, pitch, roll])
                         rospy.logerr([joints.get(frame).yaw, joints.get(frame).pitch, joints.get(frame).roll])
