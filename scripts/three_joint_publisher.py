@@ -33,19 +33,19 @@ class SinglePublisher:
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
         else:
-            joints[upper_topic] = ThreeJoint('upper', 'world', 0.30)
+            joints['upper'] = ThreeJoint('upper', 'world', 0.30)
             lower_topic = rospy.get_param('lower', 'none')
             rospy.logerr(lower_topic)
             if lower_topic == 'none':
                 rospy.logerr('No topic for lower joint found')
             else:
-                joints[lower_topic] = ThreeJoint('lower', joints.get('upper').name, 0.30)
+                joints['lower'] = ThreeJoint('lower', joints.get('upper').name, 0.30)
                 hand_topic = rospy.get_param('hand', 'none')
                 rospy.logerr(hand_topic)
                 if hand_topic == 'none':
                     rospy.logerr('No topic for hand joint found')
                 else:
-                    joints[hand_topic] = ThreeJoint('hand', joints.get('hand').name, 0.05)
+                    joints['hand'] = ThreeJoint('hand', joints.get('hand').name, 0.05)
 
         if len(dongle_list) == 0:
             rospy.logerr("No dongles found, exiting")
@@ -80,8 +80,6 @@ class SinglePublisher:
                     dev_list.append(dev)
 
         while not rospy.is_shutdown():
-            # r.sleep()
-            # for d in dongle_list:
             for device in dev_list:
                 if device is not None:
                     batch = tsa.TSWLSensor.getStreamingBatch(device)
