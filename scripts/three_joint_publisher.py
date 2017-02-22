@@ -128,6 +128,8 @@ class SinglePublisher:
                         t2.child_frame_id = joints.get(frame).name + '2'
                         t3.child_frame_id = joints.get(frame).name + '3'
 
+                        pitch += 1.57079632679
+
                         (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
                              t.transform.rotation.y,
@@ -170,7 +172,7 @@ class SinglePublisher:
                         #     joints.get(frame).yaw)
                         # joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
-                        joints.get(frame).x = joints.get(frame).radius * math.cos(joints.get(frame).pitch+1.57079632679) * math.sin(
+                        joints.get(frame).x = joints.get(frame).radius * math.cos(joints.get(frame).pitch) * math.sin(
                             joints.get(frame).yaw
                         )
 
