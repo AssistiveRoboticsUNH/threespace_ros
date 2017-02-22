@@ -27,19 +27,21 @@ class SinglePublisher:
         publishers = {}
         dv_publishers = {}
         broadcasters = {}
+        joints = {}
         upper_topic = rospy.get_param('upper', 'none')
         rospy.logerr(upper_topic)
-        joints = {}
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
         else:
             joints[upper_topic] = ThreeJoint('upper', 'world', 0.30)
             lower_topic = rospy.get_param('lower', 'none')
+            rospy.logerr(lower_topic)
             if lower_topic == 'none':
                 rospy.logerr('No topic for lower joint found')
             else:
                 joints[lower_topic] = ThreeJoint('lower', joints.get(upper_topic), 0.30)
                 hand_topic = rospy.get_param('hand', 'none')
+                rospy.logerr(hand_topic)
                 if hand_topic == 'none':
                     rospy.logerr('No topic for hand joint found')
                 else:
