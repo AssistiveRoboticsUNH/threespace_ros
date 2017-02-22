@@ -135,7 +135,7 @@ class SinglePublisher:
                              t.transform.rotation.w])
                         if yaw == 0.0 or pitch == 0.0 or roll == 0.0:
                             continue
-                        pitch += 1.57079632679
+
                         if joints.get(frame).set is False:
                             joints.get(frame).initYaw = yaw
                             joints.get(frame).intPitch = pitch
@@ -170,11 +170,11 @@ class SinglePublisher:
                         #     joints.get(frame).yaw)
                         # joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
-                        joints.get(frame).x = joints.get(frame).radius * math.cos(joints.get(frame).pitch) * math.sin(
+                        joints.get(frame).x = joints.get(frame).radius * math.cos(joints.get(frame).pitch+1.57079632679) * math.sin(
                             joints.get(frame).yaw
                         )
 
-                        joints.get(frame).y = -joints.get(frame).radius * math.cos(joints.get(frame).pitch) * math.cos(
+                        joints.get(frame).y = -joints.get(frame).radius * math.cos(joints.get(frame).pitch+1.57079632679) * math.cos(
                              joints.get(frame).yaw)
 
                         joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
