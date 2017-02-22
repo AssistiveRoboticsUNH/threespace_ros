@@ -47,33 +47,6 @@ class SinglePublisher:
                 else:
                     joints[hand_topic] = ThreeJoint('hand', joints.get(lower_topic).name, 0.05)
 
-        # frame_ids = {'upper': 'upper',
-        #              'lower': 'lower',
-        #              'hand': 'hand'}
-        # parent_frames = {'upper': 'world',
-        #                  'lower': 'upper2',
-        #                  'hand': 'lower2'}
-        # radii = {
-        #     'upper': 0.25,
-        #     'lower': 0.25,
-        #     'hand': 0.05
-        # }
-        # indexes = {
-        #     upper_topic: 'upper',
-        #     lower_topic: 'lower',
-        #     hand_topic: 'hand'
-        # }
-        # previous = {
-        #     'upper': [0, 0, 0],
-        #     'lower': [0, 0, 0],
-        #     'hand': [0, 0, 0]
-        # }
-        # calibrated = {
-        #     'upper': False,
-        #     'lower': False,
-        #     'hand': False
-        # }
-
         if len(dongle_list) == 0:
             rospy.logerr("No dongles found, exiting")
             exit()
@@ -169,7 +142,7 @@ class SinglePublisher:
                         # joints.get(frame).yaw = yaw - joints.get(frame).yaw
 
                         if joints.get(frame).parent != 'world':
-                            rospy.logerr(joints.get(frame).name+" "+joints.get(frame).parent.name)
+                            rospy.logerr(joints.get(frame).name+" "+joints.get(frame).parent)
                             joints.get(frame).roll = joints.get(frame).roll + joints.get(joints.get(frame).parent).roll
                             joints.get(frame).yaw = joints.get(frame).yaw + joints.get(joints.get(frame).parent).yaw
                             joints.get(frame).pitch = joints.get(frame).pitch + joints.get(
