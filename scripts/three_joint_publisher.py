@@ -144,12 +144,11 @@ class SinglePublisher:
                             joints.get(frame).roll = roll - joints.get(frame).initRoll
                         if abs(joints.get(frame).pitch - pitch) > 0.1:
                             joints.get(frame).pitch = pitch - joints.get(frame).initPitch
+                            rospy.logerr([yaw, pitch, roll])
+                            rospy.logerr([joints.get(frame).yaw, joints.get(frame).pitch, joints.get(frame).roll])
+                            rospy.logerr("*******************************")
                         if abs(joints.get(frame).yaw - yaw) > 0.1:
                             joints.get(frame).yaw = yaw - joints.get(frame).initYaw
-
-                        rospy.logerr([yaw, pitch, roll])
-                        rospy.logerr([joints.get(frame).yaw, joints.get(frame).pitch, joints.get(frame).roll])
-                        rospy.logerr("*******************************")
 
                         q = tf.transformations.quaternion_from_euler(yaw, pitch, roll)
                         msg = geometry_msgs.msg.Quaternion(q[0], q[1], q[2], q[3])
