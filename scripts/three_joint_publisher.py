@@ -140,11 +140,11 @@ class SinglePublisher:
                             joints.get(frame).initRoll = roll
                             joints.get(frame).set = True
 
-                        if math.abs(joints.get(frame).roll - roll) > 0.1:
+                        if abs(joints.get(frame).roll - roll) > 0.1:
                             joints.get(frame).roll = roll - joints.get(frame).initRoll
-                        if math.abs(joints.get(frame).pitch - pitch) > 0.1:
+                        if abs(joints.get(frame).pitch - pitch) > 0.1:
                             joints.get(frame).pitch = pitch - joints.get(frame).initPitch
-                        if math.abs(joints.get(frame).yaw - yaw) > 0.1:
+                        if abs(joints.get(frame).yaw - yaw) > 0.1:
                             joints.get(frame).yaw = yaw - joints.get(frame).initYaw
 
                         rospy.logerr([yaw, pitch, roll])
