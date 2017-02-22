@@ -33,19 +33,19 @@ class SinglePublisher:
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
         else:
-            joints['upper'] = ThreeJoint('upper', 'world', 0.30)
+            joints[upper_topic] = ThreeJoint('upper', upper_topic, 'world', 0.30)
             lower_topic = rospy.get_param('lower', 'none')
             rospy.logerr(lower_topic)
             if lower_topic == 'none':
                 rospy.logerr('No topic for lower joint found')
             else:
-                joints['lower'] = ThreeJoint('lower', joints.get('upper').name, 0.30)
+                joints[lower_topic] = ThreeJoint('lower', upper_topic, joints.get('upper').name, 0.30)
                 hand_topic = rospy.get_param('hand', 'none')
                 rospy.logerr(hand_topic)
                 if hand_topic == 'none':
                     rospy.logerr('No topic for hand joint found')
                 else:
-                    joints['hand'] = ThreeJoint('hand', joints.get('hand').name, 0.05)
+                    joints[hand_topic] = ThreeJoint('hand', lower_topic, joints.get('hand').name, 0.05)
 
         if len(dongle_list) == 0:
             rospy.logerr("No dongles found, exiting")
@@ -140,11 +140,11 @@ class SinglePublisher:
                         # joints.get(frame).yaw = yaw - joints.get(frame).yaw
 
                         if joints.get(frame).parent != 'world':
-                            rospy.logerr(joints.get(frame).name+" "+joints.get(frame).parent)
-                            joints.get(frame).roll = joints.get(frame).roll + joints.get(joints.get(frame).parent).roll
-                            joints.get(frame).yaw = joints.get(frame).yaw + joints.get(joints.get(frame).parent).yaw
+                            rospy.logerr(joints.get(frame).name+" "+joints.get(frame).index)
+                            joints.get(frame).roll = joints.get(frame).roll + joints.get(joints.get(frame).index).roll
+                            joints.get(frame).yaw = joints.get(frame).yaw + joints.get(joints.get(frame).index).yaw
                             joints.get(frame).pitch = joints.get(frame).pitch + joints.get(
-                                joints.get(frame).parent).pitch
+                                joints.get(frame).index).pitch
 
                             t2.transform.rotation = t.transform.rotation
                             joints.get(frame).x = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.sin(

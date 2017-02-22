@@ -1,6 +1,7 @@
 class ThreeJoint:
-    def __init__(self, name, parent, radius):
+    def __init__(self, name, index, parent, radius):
         self.name = name
+        self.index = index
         self.parent = parent
         self.child = name + '2'
         self.radius = radius
