@@ -133,13 +133,16 @@ class SinglePublisher:
                              t.transform.rotation.y,
                              t.transform.rotation.z,
                              t.transform.rotation.w])
-                        rospy.logerr([yaw, pitch, roll])
 
                         if joints.get(frame).set is False:
                             joints.get(frame).yaw = yaw
                             joints.get(frame).pitch = pitch
                             joints.get(frame).roll = roll
                             joints.get(frame).set = True
+
+                        rospy.logerr([yaw, pitch, roll])
+                        rospy.logerr([joints.get(frame).yaw, joints.get(frame).pitch, joints.get(frame).roll])
+                        rospy.logerr("*******************************")
 
                         joints.get(frame).roll = roll - joints.get(frame).roll
                         joints.get(frame).pitch = pitch - joints.get(frame).pitch
