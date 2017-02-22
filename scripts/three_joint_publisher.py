@@ -140,7 +140,6 @@ class SinglePublisher:
                         # joints.get(frame).yaw = yaw - joints.get(frame).yaw
 
                         if joints.get(frame).parent != 'world':
-                            rospy.logerr(joints.get(frame).name+" "+joints.get(frame).index)
                             joints.get(frame).roll = joints.get(frame).roll + joints.get(joints.get(frame).index).roll
                             joints.get(frame).yaw = joints.get(frame).yaw + joints.get(joints.get(frame).index).yaw
                             joints.get(frame).pitch = joints.get(frame).pitch + joints.get(
@@ -152,24 +151,24 @@ class SinglePublisher:
                                 joints.get(frame).yaw)
                             joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
-                            t.transform.translation.x = joints.get(frame).x
-                            t.transform.translation.y = joints.get(frame).y
-                            t.transform.translation.z = joints.get(frame).z
-                            t2.transform.translation.x = joints.get(frame).x * 2
-                            t2.transform.translation.y = joints.get(frame).y * 2
-                            t2.transform.translation.z = joints.get(frame).z * 2
+                            t.transform.translation.x = joints.get(frame).x * 2
+                            t.transform.translation.y = joints.get(frame).y * 2
+                            t.transform.translation.z = joints.get(frame).z * 2
+                            t2.transform.translation.x = joints.get(frame).x
+                            t2.transform.translation.y = joints.get(frame).y
+                            t2.transform.translation.z = joints.get(frame).z
                             t3.transform.translation.x = joints.get(frame).x * 3
                             t3.transform.translation.y = joints.get(frame).y * 3
                             t3.transform.translation.z = joints.get(frame).z * 3
 
                             # rospy.logerr(str(joints.get(frame).x)+" "+str(joints.get(frame).y)+" "+str(joints.get(frame).z))
                         else:
-                            t.transform.translation.x = joints.get(frame).x
-                            t.transform.translation.y = joints.get(frame).y
-                            t.transform.translation.z = joints.get(frame).z
-                            t2.transform.translation.x = joints.get(frame).x * 2
-                            t2.transform.translation.y = joints.get(frame).y * 2
-                            t2.transform.translation.z = joints.get(frame).z * 2
+                            t.transform.translation.x = joints.get(frame).x * 2
+                            t.transform.translation.y = joints.get(frame).y * 2
+                            t.transform.translation.z = joints.get(frame).z * 2
+                            t2.transform.translation.x = joints.get(frame).x
+                            t2.transform.translation.y = joints.get(frame).y
+                            t2.transform.translation.z = joints.get(frame).z
                             t3.transform.translation.x = joints.get(frame).x * 3
                             t3.transform.translation.y = joints.get(frame).y * 3
                             t3.transform.translation.z = joints.get(frame).z * 3
