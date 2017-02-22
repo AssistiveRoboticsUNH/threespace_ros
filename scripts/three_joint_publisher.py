@@ -140,6 +140,7 @@ class SinglePublisher:
                         # joints.get(frame).yaw = yaw - joints.get(frame).yaw
 
                         if joints.get(frame).parent != 'world':
+
                             joints.get(frame).roll = joints.get(frame).roll + joints.get(joints.get(frame).index).roll
                             joints.get(frame).yaw = joints.get(frame).yaw + joints.get(joints.get(frame).index).yaw
                             joints.get(frame).pitch = joints.get(frame).pitch + joints.get(
@@ -163,15 +164,15 @@ class SinglePublisher:
 
                             # rospy.logerr(str(joints.get(frame).x)+" "+str(joints.get(frame).y)+" "+str(joints.get(frame).z))
                         else:
-                            t.transform.translation.x = joints.get(frame).x * 2
-                            t.transform.translation.y = joints.get(frame).y * 2
-                            t.transform.translation.z = joints.get(frame).z * 2
-                            t2.transform.translation.x = joints.get(frame).x
-                            t2.transform.translation.y = joints.get(frame).y
-                            t2.transform.translation.z = joints.get(frame).z
-                            t3.transform.translation.x = joints.get(frame).x * 3
-                            t3.transform.translation.y = joints.get(frame).y * 3
-                            t3.transform.translation.z = joints.get(frame).z * 3
+                            t.transform.translation.x = joints.get(frame).radius * 2
+                            t.transform.translation.y = 0
+                            t.transform.translation.z = 0
+                            t2.transform.translation.x = joints.get(frame).radius
+                            t2.transform.translation.y = 0
+                            t2.transform.translation.z = 0
+                            t3.transform.translation.x = joints.get(frame).radius * 3
+                            t3.transform.translation.y = 0
+                            t3.transform.translation.z = 0
 
                         # t.transform.translation.x = joints.get(frame).radius * math.sin(
                         #     joints.get(frame).pitch) * math.cos(joints.get(frame).yaw)
