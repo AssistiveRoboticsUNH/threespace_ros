@@ -104,6 +104,7 @@ class SinglePublisher:
                         dv.quat.quaternion.y = quat[0]
                         dv.quat.quaternion.z = -quat[1]
                         dv.quat.quaternion.w = quat[3]
+                        t.transform.rotation = dv.quat.quaternion
                         dv.gyroX = full[0]
                         dv.gyroY = full[1]
                         dv.gyroZ = full[2]
@@ -131,7 +132,7 @@ class SinglePublisher:
                              t.transform.rotation.y,
                              t.transform.rotation.z,
                              t.transform.rotation.w])
-
+                        rospy.logerr([yaw, pitch, roll])
                         # if joints.get(frame).set is False:
                         joints.get(frame).yaw = yaw
                         joints.get(frame).pitch = pitch
@@ -154,7 +155,7 @@ class SinglePublisher:
                         joints.get(frame).y = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.cos(
                             joints.get(frame).yaw)
                         joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
-                        rospy.logerr([joints.get(frame).x, joints.get(frame).y, joints.get(frame).z])
+
                         t.transform.translation.x = joints.get(frame).x * 2
                         t.transform.translation.y = joints.get(frame).y * 2
                         t.transform.translation.z = joints.get(frame).z * 2
