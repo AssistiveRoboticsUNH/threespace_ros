@@ -18,6 +18,14 @@ from socket import *
 from threespace_ros.msg import dataVec
 
 
+def quaternion_to_msg(q):
+  msg = Quaternion()
+  msg.x = q[0]
+  msg.y = q[1]
+  msg.z = q[2]
+  msg.w = q[3]
+  return msg
+
 class SinglePublisher:
     def __init__(self):
         rospy.init_node("publisher")
@@ -135,8 +143,9 @@ class SinglePublisher:
                         joints.get(frame).pitch = pitch - joints.get(frame).pitch
                         joints.get(frame).yaw = yaw - joints.get(frame).yaw
 
-                        t.transform.rotation = tf.transformations.quaternion_from_euler(
-                            joints.get(frame).roll, joints.get(frame).yaw, joints.get(frame).pitch)
+                        q = quaternion_to_msg(tf.transformations.quaternion_from_euler(
+                            joints.get(frame).roll, joints.get(frame).yaw, joints.get(frame).pitch))
+                        t.transform.rotation = q
                         t2.transform.rotation = t.transform.rotation
                         t3.transform.rotation = t.transform.rotation
 
