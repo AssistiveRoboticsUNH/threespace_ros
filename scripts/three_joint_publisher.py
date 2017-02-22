@@ -19,12 +19,13 @@ from threespace_ros.msg import dataVec
 
 
 def quaternion_to_msg(q):
-  msg = Quaternion()
-  msg.x = q[0]
-  msg.y = q[1]
-  msg.z = q[2]
-  msg.w = q[3]
-  return msg
+    msg = Quaternion()
+    msg.x = q[0]
+    msg.y = q[1]
+    msg.z = q[2]
+    msg.w = q[3]
+    return msg
+
 
 class SinglePublisher:
     def __init__(self):
@@ -47,13 +48,13 @@ class SinglePublisher:
             if lower_topic == 'none':
                 rospy.logerr('No topic for lower joint found')
             else:
-                joints[lower_topic] = ThreeJoint('lower', upper_topic, joints.get(upper_topic).name+'3', 0.30)
+                joints[lower_topic] = ThreeJoint('lower', upper_topic, joints.get(upper_topic).name + '3', 0.30)
                 hand_topic = rospy.get_param('hand', 'none')
                 rospy.logerr(hand_topic)
                 if hand_topic == 'none':
                     rospy.logerr('No topic for hand joint found')
                 else:
-                    joints[hand_topic] = ThreeJoint('hand', lower_topic, joints.get(lower_topic).name+'3', 0.05)
+                    joints[hand_topic] = ThreeJoint('hand', lower_topic, joints.get(lower_topic).name + '3', 0.05)
 
         if len(dongle_list) == 0:
             rospy.logerr("No dongles found, exiting")
@@ -133,11 +134,12 @@ class SinglePublisher:
                              t.transform.rotation.z,
                              t.transform.rotation.w])
                         rospy.logerr([yaw, pitch, roll])
-                        # if joints.get(frame).set is False:
-                        joints.get(frame).yaw = yaw
-                        joints.get(frame).pitch = pitch
-                        joints.get(frame).roll = roll
-                        joints.get(frame).set = True
+
+                        if joints.get(frame).set is False:
+                            joints.get(frame).yaw = yaw
+                            joints.get(frame).pitch = pitch
+                            joints.get(frame).roll = roll
+                            joints.get(frame).set = True
 
                         joints.get(frame).roll = roll - joints.get(frame).roll
                         joints.get(frame).pitch = pitch - joints.get(frame).pitch
@@ -165,7 +167,6 @@ class SinglePublisher:
                         t3.transform.translation.x = joints.get(frame).x * 3
                         t3.transform.translation.y = joints.get(frame).y * 3
                         t3.transform.translation.z = joints.get(frame).z * 3
-
 
                         # t.transform.translation.x = joints.get(frame).radius * math.sin(
                         #     joints.get(frame).pitch) * math.cos(joints.get(frame).yaw)
