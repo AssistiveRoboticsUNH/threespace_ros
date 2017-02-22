@@ -128,8 +128,6 @@ class SinglePublisher:
                         t2.child_frame_id = joints.get(frame).name + '2'
                         t3.child_frame_id = joints.get(frame).name + '3'
 
-
-
                         (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
                              t.transform.rotation.y,
@@ -152,6 +150,12 @@ class SinglePublisher:
                             joints.get(frame).pitch = pitch - joints.get(frame).initPitch
                             rospy.logerr([yaw, pitch, roll])
                             rospy.logerr([joints.get(frame).yaw, joints.get(frame).pitch, joints.get(frame).roll])
+                            rospy.logerr("COS :"+[math.cos(joints.get(frame).yaw),
+                                                  math.cos(joints.get(frame).pitch),
+                                                  math.cos(joints.get(frame).roll)])
+                            rospy.logerr("SIN :" + [math.sin(joints.get(frame).yaw),
+                                                    math.sin(joints.get(frame).pitch),
+                                                    math.sin(joints.get(frame).roll)])
                             rospy.logerr([joints.get(frame).x, joints.get(frame).y, joints.get(frame).z])
                             rospy.logerr("*******************************")
                         if abs(joints.get(frame).yaw - yaw - joints.get(frame).initYaw) > 0.01:
@@ -175,8 +179,9 @@ class SinglePublisher:
                         joints.get(frame).x = joints.get(frame).radius *\
                                               math.cos(joints.get(frame).yaw)
 
-                        joints.get(frame).y = -joints.get(frame).radius * math.cos(joints.get(frame).pitch+1.57079632679) * math.cos(
-                             joints.get(frame).yaw)
+                        joints.get(frame).y = -joints.get(frame).radius * math.cos(
+                            joints.get(frame).pitch + 1.57079632679) * math.cos(
+                            joints.get(frame).yaw)
 
                         joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
