@@ -105,7 +105,7 @@ class SinglePublisher:
                         dv.quat.quaternion.y = quat[0]
                         dv.quat.quaternion.z = -quat[1]
                         dv.quat.quaternion.w = quat[3]
-
+                        t.transform.rotation = dv.quat.quaternion
                         dv.gyroX = full[0]
                         dv.gyroY = full[1]
                         dv.gyroZ = full[2]
