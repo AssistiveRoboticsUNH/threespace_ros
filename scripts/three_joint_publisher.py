@@ -167,7 +167,7 @@ class SinglePublisher:
                         msg = geometry_msgs.msg.Quaternion(q[0], q[1], q[2], q[3])
 
                         t.transform.rotation = msg
-                        t2.transform.rotation = t.transform.rotation
+                        # t2.transform.rotation = t.transform.rotation
                         t3.transform.rotation = t.transform.rotation
 
                         # joints.get(frame).x = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.sin(
