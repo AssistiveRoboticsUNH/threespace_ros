@@ -138,6 +138,7 @@ class SinglePublisher:
                             joints.get(frame).initYaw = yaw
                             joints.get(frame).intPitch = pitch
                             joints.get(frame).initRoll = roll
+                            rospy.logerr([joints.get(frame).initYaw, joints.get(frame).initPitch, joints.get(frame).initRoll])
                             joints.get(frame).set = True
 
                         if abs(joints.get(frame).roll - roll - joints.get(frame).initRoll) > 0.1:
