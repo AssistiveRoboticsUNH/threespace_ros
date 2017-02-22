@@ -149,6 +149,7 @@ class SinglePublisher:
                             joints.get(frame).pitch = pitch - joints.get(frame).initPitch
                             rospy.logerr([yaw, pitch, roll])
                             rospy.logerr([joints.get(frame).yaw, joints.get(frame).pitch, joints.get(frame).roll])
+                            rospy.logerr([joints.get(frame).x, joints.get(frame).y, joints.get(frame).z])
                             rospy.logerr("*******************************")
                         if abs(joints.get(frame).yaw - yaw - joints.get(frame).initYaw) > 0.01:
                             joints.get(frame).yaw = yaw - joints.get(frame).initYaw
@@ -160,11 +161,11 @@ class SinglePublisher:
                         t2.transform.rotation = t.transform.rotation
                         t3.transform.rotation = t.transform.rotation
 
-                        joints.get(frame).y = joints.get(frame).radius * math.sin(joints.get(frame).roll) * math.sin(
-                            joints.get(frame).pitch)
-                        joints.get(frame).x = joints.get(frame).radius * math.sin(joints.get(frame).roll) * math.cos(
-                            joints.get(frame).pitch)
-                        joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).roll)
+                        joints.get(frame).x = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.sin(
+                            joints.get(frame).yaw)
+                        joints.get(frame).y = joints.get(frame).radius * math.sin(joints.get(frame).pitch) * math.cos(
+                            joints.get(frame).yaw)
+                        joints.get(frame).z = joints.get(frame).radius * math.sin(joints.get(frame).pitch)
 
                         t.transform.translation.x = joints.get(frame).x * 2
                         t.transform.translation.y = joints.get(frame).y * 2
