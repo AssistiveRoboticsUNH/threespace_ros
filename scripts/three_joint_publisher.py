@@ -180,14 +180,14 @@ class SinglePublisher:
                                               math.cos(joints.get(frame).yaw)*\
                                               math.cos(joints.get(frame).pitch)
 
-                        joints.get(frame).y = -joints.get(frame).radius * math.cos(
-                            joints.get(frame).pitch + 1.57079632679) * math.cos(
-                            joints.get(frame).yaw)
+                        joints.get(frame).y = joints.get(frame).radius *\
+                                              math.sin(joints.get(frame).pitch + 1.57079632679) *\
+                                              math.cos(joints.get(frame).yaw)
 
                         joints.get(frame).z = joints.get(frame).radius * math.cos(joints.get(frame).pitch)
 
                         t.transform.translation.x = joints.get(frame).x * 2
-                        t.transform.translation.y = 0
+                        t.transform.translation.y = joints.get(frame).y * 2
                         t.transform.translation.z = 0
                         t2.transform.translation.x = joints.get(frame).x
                         t2.transform.translation.y = joints.get(frame).y
