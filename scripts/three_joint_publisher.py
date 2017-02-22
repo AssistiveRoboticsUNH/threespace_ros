@@ -165,7 +165,8 @@ class SinglePublisher:
                         q = tf.transformations.quaternion_from_euler(joints.get(
                             frame).roll, joints.get(frame).pitch, joints.get(frame).yaw)
                         msg = geometry_msgs.msg.Quaternion(q[0], q[1], q[2], q[3])
-                        empty = geometry_msgs.msg.Quaternion(tf.transformations.quaternion_from_euler(0, 0, 0))
+                        eq = tf.transformations.quaternion_from_euler(0, 0, 0)
+                        empty = geometry_msgs.msg.Quaternion(eq[0], eq[1], eq[2], eq[3])
                         t.transform.rotation = msg
                         t2.transform.rotation = empty
                         t3.transform.rotation = t.transform.rotation
