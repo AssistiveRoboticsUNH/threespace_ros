@@ -143,7 +143,7 @@ class SinglePublisher:
                         joints.get(frame).pitch = pitch - joints.get(frame).pitch
                         joints.get(frame).yaw = yaw - joints.get(frame).yaw
 
-                        q = tf.transformations.quaternion_from_euler(-roll, pitch, yaw)
+                        q = tf.transformations.quaternion_from_euler(yaw, pitch, roll)
                         msg = geometry_msgs.msg.Quaternion(q[0], q[1], q[2], q[3])
 
                         t.transform.rotation = msg
