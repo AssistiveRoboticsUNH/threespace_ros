@@ -187,15 +187,12 @@ class SinglePublisher:
                         joints.get(frame).z = - joints.get(frame).radius *\
                                               math.sin(joints.get(frame).pitch)
 
-                        t.transform.translation.x = joints.get(frame).x * 2
-                        t.transform.translation.y = joints.get(frame).y * 2
-                        t.transform.translation.z = joints.get(frame).z * 2
-                        t2.transform.translation.x = joints.get(frame).x
-                        t2.transform.translation.y = joints.get(frame).y
-                        t2.transform.translation.z = 0
-                        t3.transform.translation.x = joints.get(frame).x * 3
-                        t3.transform.translation.y = 0
-                        t3.transform.translation.z = 0
+                        t.transform.translation.x = joints.get(frame).x
+                        t.transform.translation.y = joints.get(frame).y
+                        t.transform.translation.z = joints.get(frame).z
+                        t2.transform.translation.x = joints.get(frame).x * 2
+                        t2.transform.translation.y = joints.get(frame).y * 2
+                        t2.transform.translation.z = joints.get(frame).z * 2
 
                         # t.transform.translation.x = joints.get(frame).radius * math.sin(
                         #     joints.get(frame).pitch) * math.cos(joints.get(frame).yaw)
@@ -209,11 +206,11 @@ class SinglePublisher:
                         # t2.transform.translation.z = joints.get(frame).radius * 2 * math.cos(joints.get(frame).yaw)
 
                         br = tf2_ros.TransformBroadcaster()
-                        # br2 = tf2_ros.TransformBroadcaster()
+                        br2 = tf2_ros.TransformBroadcaster()
                         #  br3 = tf2_ros.TransformBroadcaster()
 
                         br.sendTransform(t)
-                        # br2.sendTransform(t2)
+                        br2.sendTransform(t2)
                         # br3.sendTransform(t3)
                         dp.publish(dv)
                     else:
