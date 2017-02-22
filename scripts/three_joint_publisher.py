@@ -128,7 +128,7 @@ class SinglePublisher:
                         t2.child_frame_id = joints.get(frame).name + '2'
                         t3.child_frame_id = joints.get(frame).name + '3'
 
-                        pitch += 1.57079632679
+
 
                         (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(
                             [t.transform.rotation.x,
@@ -137,6 +137,8 @@ class SinglePublisher:
                              t.transform.rotation.w])
                         if yaw == 0.0 or pitch == 0.0 or roll == 0.0:
                             continue
+
+                        pitch += 1.57079632679
 
                         if joints.get(frame).set is False:
                             joints.get(frame).initYaw = yaw
