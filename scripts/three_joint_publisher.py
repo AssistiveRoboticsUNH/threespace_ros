@@ -14,7 +14,7 @@ from socket import *
 from threespace_ros.msg import dataVec
 
 
-class SinglePublisher:
+class ThreeJointPublisher:
     def __init__(self):
         global id_
         rospy.init_node("publisher")
@@ -25,25 +25,27 @@ class SinglePublisher:
         dv_publishers = {}
         broadcasters = {}
         joints = {}
+        
         upper_topic = rospy.get_param('upper', 'none')
-        rospy.logerr(upper_topic)
         if upper_topic == 'none':
             rospy.logerr('No topic for upper joint found, exiting')
         else:
             joints[upper_topic] = ThreeJoint('upper', upper_topic, 'world', 0.30)
-            lower_topic = rospy.get_param('lower', 'none')
-            rospy.logerr(lower_topic)
-            if lower_topic == 'none':
-                rospy.logerr('No topic for lower joint found')
-            else:
-                joints[lower_topic] = ThreeJoint('lower', lower_topic, joints.get(upper_topic).name + '2', 0.30)
-                hand_topic = rospy.get_param('hand', 'none')
-                rospy.logerr(hand_topic)
-                if hand_topic == 'none':
-                    rospy.logerr('No topic for hand joint found')
-                else:
-                    joints[hand_topic] = ThreeJoint('hand', hand_topic, joints.get(lower_topic).name + '2', 0.05)
-
+            rospy.logwarn("Upper: "+ joints.get(upper_topic).name+" "+joints.get(upper_topic).parent)
+            
+        lower_topic = rospy.get_param('lower', 'none')
+        if lower_topic == 'none':
+            rospy.logerr('No topic for lower joint found')
+        else:
+            joints[lower_topic] = ThreeJoint('lower', lower_topic, joints.get(upper_topic).name + '2', 0.30)
+            rospy.logwarn("Lower: "+ joints.get(lower_topic).name+" "+joints.get(lower_topic).parent)
+            
+        hand_topic = rospy.get_param('hand', 'none')
+        if hand_topic == 'none':
+            rospy.logerr('No topic for hand joint found')
+        else:
+            joints[hand_topic] = ThreeJoint('hand', hand_topic, joints.get(lower_topic).name + '2', 0.05)
+            rospy.logwarn("Hand: "+ joints.get(hand_topic).name+" "+joints.get(hand_topic).parent)
         if len(dongle_list) == 0:
             rospy.logerr("No dongles found, exiting")
             exit()
@@ -66,8 +68,6 @@ class SinglePublisher:
                     tsa.TSWLSensor.setStreamingSlots(device, slot0='getTaredOrientationAsQuaternion',
                                                      slot1='getAllCorrectedComponentSensorData')
 
-        t = geometry_msgs.msg.TransformStamped()
-        t2 = geometry_msgs.msg.TransformStamped()
         dv = dataVec()
         dev_list = []
         for d in dongle_list:
@@ -80,19 +80,20 @@ class SinglePublisher:
                 if device is not None:
                     batch = tsa.TSWLSensor.getStreamingBatch(device)
                     if batch is not None:
-                        # print(batch)
-                        frame = sensor_table.sensor_table.get(id_)
-                        quat = batch[0:4]
-                        full = batch[4:]
                         id_ = str(device)
                         id_ = id_[id_.find('W'):-1]
+                        frame = sensor_table.sensor_table.get(id_)
+                        if frame not in joints:
+                            continue
+                        quat = batch[0:4]
+                        full = batch[4:]
                         dp = dv_publishers.get(frame)
                         dv.header.stamp = rospy.get_rostime()
+                        dv.header.frame_id = frame
                         dv.quat.quaternion.x = -quat[2]
                         dv.quat.quaternion.y = quat[0]
                         dv.quat.quaternion.z = -quat[1]
                         dv.quat.quaternion.w = quat[3]
-                        t.transform.rotation = dv.quat.quaternion
                         dv.gyroX = full[0]
                         dv.gyroY = full[1]
                         dv.gyroZ = full[2]
@@ -103,9 +104,15 @@ class SinglePublisher:
                         dv.comY = full[7]
                         dv.comZ = full[8]
 
-                        t.header.stamp = t2.header.stamp = t2.header.stamprospy.Time.now()
+                        t = geometry_msgs.msg.TransformStamped()
+                        t2 = geometry_msgs.msg.TransformStamped()
+                        t.transform.rotation = dv.quat.quaternion
+                        
+                        t.header.stamp = rospy.Time.now()
+                        t2.header.stamp = rospy.Time.now()
 
-                        t.header.frame_id = t2.header.frame_id = joints.get(frame).parent
+                        t.header.frame_id = joints.get(frame).parent
+                        t2.header.frame_id = joints.get(frame).parent
 
                         t.child_frame_id = joints.get(frame).name
                         t2.child_frame_id = joints.get(frame).name + '2'
@@ -184,4 +191,4 @@ class SinglePublisher:
 
 
 if __name__ == "__main__":
-    SinglePublisher()
+    ThreeJointPublisher()
