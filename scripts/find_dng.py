@@ -8,30 +8,31 @@ import find_ports
 from threespace import *
 from socket import *
 
+# FIND ALL CONNECTED BLUETOOTH DONGLES
 def returnDev(arg):
-    #rospy.init_node("detect")
+    # rospy.init_node("detect")
     result = find_ports.findPorts()
     dng_list = []
     dev_list = []
     rospy.logwarn(result)
-    if(arg=="dng"):
+    if arg == "dng":
         for a_port in result:
             try:
                 rospy.loginfo("Checking for dongle in port %s", a_port)
-                dongle = tsa.TSDongle(com_port = a_port, baudrate=115200)
+                dongle = tsa.TSDongle(com_port=a_port, baudrate=115200)
                 rospy.logwarn(dongle)
                 hwid = convertString(dongle.f7WriteRead('getSerialNumber'))
                 panid = None
                 channel = None
                 wa = None
                 att = 0
-                while((panid==None)or(channel==None)or(wa==None)):
+                while panid is None or channel is None or wa is None:
                     try:
-                        att+=1
-                        if(att > 10):
+                        att += 1
+                        if att > 10:
                             break
-                        rospy.loginfo("Attempting to get Dongle data from port %s, attempt #%d",a_port ,att)
-                        channel  = tsa.TSDongle.getWirelessChannel(dongle)
+                        rospy.loginfo("Attempting to get Dongle data from port %s, attempt #%d", a_port, att)
+                        channel = tsa.TSDongle.getWirelessChannel(dongle)
                         panid = tsa.TSDongle.getWirelessPanID(dongle)
                         wa = tsa.TSDongle.getWirelessAddress(dongle)
                         rospy.logwarn("HW ID : %s", hwid)
@@ -50,7 +51,7 @@ def returnDev(arg):
         for a_port in result:
             try:
                 rospy.loginfo("Checking for wireless sensor in port %s", a_port)
-                sensor = tsa.TSWLSensor(com_port = a_port, baudrate=115200)
+                sensor = tsa.TSWLSensor(com_port=a_port, baudrate=115200)
                 rospy.logwarn(sensor)
                 hwid = convertString(sensor.f7WriteRead('getSerialNumber'))
                 # dev_list.append(sensor)
@@ -58,14 +59,14 @@ def returnDev(arg):
                 channel = None
                 wa = None
                 att = 0
-                while((panid==None)or(channel==None)or(wa==None)):
+                while panid is None or channel is None or wa is None:
                     try:
-                        att+=1
-                        if(att > 10):
+                        att += 1
+                        if att > 10:
                             break
-                        rospy.loginfo("Attempting to get Wireless Sensor data from port %s, attempt #%d",a_port, att)
+                        rospy.loginfo("Attempting to get Wireless Sensor data from port %s, attempt #%d", a_port, att)
                         channel = tsa.TSWLSensor.getWirelessChannel(sensor)
-                        #tsa.TSWLSensor.setWirelessPanID(sensor, channel)
+                        # tsa.TSWLSensor.setWirelessPanID(sensor, channel)
                         panid = tsa.TSWLSensor.getWirelessPanID(sensor)
                         wa = tsa.TSWLSensor.getWirelessAddress(sensor)
                         rospy.logwarn("HW ID : %s", hwid)
@@ -77,6 +78,5 @@ def returnDev(arg):
                         pass
             except:
                 pass
-        print dev_list
+        print(dev_list)
         return dev_list
-

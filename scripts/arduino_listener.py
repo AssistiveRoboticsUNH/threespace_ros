@@ -1,32 +1,28 @@
 #!/usr/bin/env python
-import time
-import sys
+
+# Listens for arduino data and republishes them as ros topics
+# will not be used again so I do not know why I'm writing this but hey
+
 import rospy
 # import config
 import serial
-import numpy as np
 from gait_hmm_ros.msg import ardu_msg
 from xbee import XBee
 from xbee import ZigBee
-
 
 data = ardu_msg()
 
 
 def make_msg(frame):
-    try:	
-        # data = frame
-	# data = ardu_msg()
+    try:
         fr_data = (frame['rf_data'][1:-1]).split(",")
-        #print fr_data[0]
         data.header.frame_id = 'arduino'
-        data.ir = int(fr_data[0]) if (int(fr_data[0])<20000) else data.ir
+        data.ir = int(fr_data[0]) if (int(fr_data[0]) < 20000) else data.ir
         data.prox = float(fr_data[1])
         data.fsrfl = int(fr_data[2])
         data.fsrfr = int(fr_data[4])
         data.fsrbk = int(fr_data[3])
-	# print data.fsrbk
-        print frame['rf_data']
+        print (frame['rf_data'])
     except:
         pass
 
@@ -51,28 +47,12 @@ arduPub = rospy.Publisher('arduino', ardu_msg, queue_size=1)
 r = rospy.Rate(10)
 
 while not rospy.is_shutdown():
-	try:
-	    # inc = dev.wait_read_frame()
-	    # make_msg(frame)
-            # print('-----------')	
-	    data.header.stamp = rospy.Time.now()
-	    arduPub.publish(data)
-	    r.sleep()
-	except:
-	    pass
-
-#         if message_received == 1:
-#             arduPub.publish(data)
-#             r.sleep()
-
-#while not rospy.is_shutdown():
-#while True:
-#    try:
-#        make_msg(dev.wait_read_frame())
-#        data.header.stamp = rospy.Time.now()
-#        arduPub.publish(data)
-#    except :
-#        rospy.logerr("timeout")
+    try:
+        data.header.stamp = rospy.Time.now()
+        arduPub.publish(data)
+        r.sleep()
+    except:
+        pass
 
 dev.halt()
 ser.close()

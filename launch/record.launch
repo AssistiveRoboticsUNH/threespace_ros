@@ -1,3 +1,7 @@
+<!--
+Records any imu frames being published using the duration and name specified by the bash file
+-->
+
 <launch>
     <arg name = "dur" default="2"/>
     <arg name = "prefix" default = "imu_recording"/>

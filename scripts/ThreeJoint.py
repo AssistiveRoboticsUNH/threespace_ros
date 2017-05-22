@@ -1,4 +1,10 @@
 class ThreeJoint:
+    # Joint format for imu publishing
+    # name : obvious
+    # index: increasing number
+    # parent: parent joint
+    # child: next joint
+    # radius: distance from child
     def __init__(self, name, index, parent, radius):
         self.name = name
         self.index = index

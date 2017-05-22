@@ -2,6 +2,9 @@
 import glob
 import serial
 
+# GET ALL AVAILABLE PORTS
+
+
 def findPorts():
     result=[]
     temp_list = glob.glob('/dev/ttyA[A-Za-z]*')

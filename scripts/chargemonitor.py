@@ -1,25 +1,17 @@
 #!/usr/bin/env python
-import roslib
 import rospy
-import serial
-import time
-import math
-import string
-import glob
-import sensor_table
 import find_dng
 import threespace as tsa
-from threespace import *
-from socket import *
 
+# PRINTS CHARGE LEVEL FOR ALL CONNECTED IMUS
 rospy.init_node("charge_monitor")
 r = rospy.Rate(100)
 
 devlist = find_dng.returnDev("dev")
-if len(devlist)==0 :
+if len(devlist) == 0:
     rospy.logwarn("No devices found, exiting")
     exit()
-    
+
 while not rospy.is_shutdown():
     for device in devlist:
         id_ = str(device)

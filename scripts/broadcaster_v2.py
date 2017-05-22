@@ -38,20 +38,15 @@ for d in dongle_list:
         if device is None:
             rospy.logerr("No Sensor Found")
         else:
-            # quat = tsa.TSWLSensor.getTaredOrientationAsQuaternion(device)
             id_ = str(device)
             id_ = id_[id_.find('W'):-1]
             rospy.logerr(id_)
-            # rospy.logerr(quat)
             frame = sensor_table.sensor_table.get(id_)
             rospy.logerr("Adding publisher for %s : %s", id_, frame)
             rospy.logerr("Battery at %s Percent ", tsa.TSWLSensor.getBatteryPercentRemaining(device))
             br = tf2_ros.TransformBroadcaster()
-            # pub = rospy.Publisher(frame, geometry_msgs.msg.QuaternionStamped, queue_size = 100)
-            # dv_pub = rospy.Publisher(frame+suffix, dataVec, queue_size=100)
-            dv_pub = rospy.Publisher(frame+suffix, imu_vector, queue_size=100)
+            dv_pub = rospy.Publisher(frame + suffix, imu_vector, queue_size=100)
             broadcasters[frame] = br
-            # publishers[frame] = pub
             dv_publishers[frame] = dv_pub
             frame_list.append(frame)
             publishers_list.append(dv_pub)
@@ -70,16 +65,16 @@ for d in dongle_list:
         if dev is not None:
             tsa.TSWLSensor.setFilterMode(dev, mode=2)
             dev_list.append(dev)
-
+# set streaming timing for the imus
 tsa.global_broadcaster.setStreamingTiming(interval=0,
                                           duration=0,
                                           delay=0,
                                           delay_offset=0,
                                           filter=dev_list)
-
+# get the readings as batch
 tsa.global_broadcaster.setStreamingSlots(slot0='getTaredOrientationAsQuaternion',
                                          slot1='getAllCorrectedComponentSensorData')
-
+# start streaming and recording
 tsa.global_broadcaster.startStreaming(filter=dev_list)
 tsa.global_broadcaster.startRecordingData(filter=dev_list)
 
@@ -115,12 +110,12 @@ while not rospy.is_shutdown():
             publishers_list[i].publish(dv)
             dev.stream_data = []
 
-
 tsa.global_broadcaster.stopStreaming(filter=dev_list)
 tsa.global_broadcaster.stopRecordingData(filter=dev_list)
+# close all the connected devices
 for d in dongle_list:
     tsa.TSDongle.close(d)
-print publishers
-print dv_publishers
-print broadcasters
+print (publishers)
+print (dv_publishers)
+print (broadcasters)
 exit()

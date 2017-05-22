@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import roslib
 import rospy
 import tf
 import tf2_ros
@@ -8,15 +7,17 @@ import math
 import sensor_table
 import find_dng
 import threespace as tsa
-from threespace import *
 from ThreeJoint import ThreeJoint
-from socket import *
 from threespace_ros.msg import dataVec
+
+# Expects imus to be publishing in the three topics defined by rosparams upper, lower, hand
+# creates joints with the origin being the upper joint
+# publishes coordinates and transform frames
+# see three_joint.launch
 
 
 class SinglePublisher:
     def __init__(self):
-        global id_
         rospy.init_node("publisher")
         r = rospy.Rate(100)
         suffix = "_data_vec"
@@ -80,7 +81,6 @@ class SinglePublisher:
                 if device is not None:
                     batch = tsa.TSWLSensor.getStreamingBatch(device)
                     if batch is not None:
-                        # print(batch)
                         frame = sensor_table.sensor_table.get(id_)
                         quat = batch[0:4]
                         full = batch[4:]
@@ -132,17 +132,6 @@ class SinglePublisher:
                         if abs(joints.get(frame).yaw - yaw - joints.get(frame).initYaw) > 0.01:
                             joints.get(frame).yaw = yaw - joints.get(frame).initYaw
 
-                        # rospy.logerr([yaw, pitch, roll])
-                        # rospy.logerr([joints.get(frame).yaw, joints.get(frame).pitch, joints.get(frame).roll])
-                        # rospy.logerr([math.cos(joints.get(frame).yaw),
-                        #               math.cos(joints.get(frame).pitch),
-                        #               math.cos(joints.get(frame).roll)])
-                        # rospy.logerr([math.sin(joints.get(frame).yaw),
-                        #               math.sin(joints.get(frame).pitch),
-                        #               math.sin(joints.get(frame).roll)])
-                        # rospy.logerr([joints.get(frame).x, joints.get(frame).y, joints.get(frame).z])
-                        # rospy.logerr("*******************************")
-
                         q = tf.transformations.quaternion_from_euler(joints.get(
                             frame).roll, joints.get(frame).pitch, joints.get(frame).yaw)
                         msg = geometry_msgs.msg.Quaternion(q[0], q[1], q[2], q[3])
@@ -173,8 +162,8 @@ class SinglePublisher:
                         br2.sendTransform(t2)
                         dp.publish(dv)
                     else:
-                        # rospy.logerr("None")
                         pass
+            r.sleep()
         for d in dongle_list:
             tsa.TSDongle.close(d)
         print(publishers)

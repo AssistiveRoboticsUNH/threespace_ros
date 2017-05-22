@@ -1,3 +1,8 @@
+<!--
+Launch file for the joint publishing node
+takes the names of the joints as arguments
+-->
+
 <launch>
     <arg name="upper" default="none"/>
     <arg name="lower" default="none"/>

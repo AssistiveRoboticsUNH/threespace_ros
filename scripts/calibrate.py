@@ -8,6 +8,8 @@ import threespace_api as tsa
 import find_dng
 from threespace_api import *
 
+
+# CALIBRATES ALL CONNECTED IMU
 rospy.init_node("calibration")
 dng_list = find_dng.returnDev("dng")
 for d in dng_list:
