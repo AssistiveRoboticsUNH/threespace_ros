@@ -1,6 +1,6 @@
 # Ros node for the YostLabs 3Space IMUs.
 
-##General Use Nodes
+## General Use Nodes
 * **find_ports.py**: gets all available serial ports
 * **find_dng.py**: gets all connected bluetooth dongles and IMUs
 * **pair.py**: pairs connected IMUs with a single conencted dongle
@@ -8,14 +8,14 @@
 * **single_publisher.py**: Finds Connected IMUs and starts publishing
  batches of data in the topics defined in sensor_table.py
 
-##Gait Detection Related Nodes & Scripts
+## Gait Detection Related Nodes & Scripts
 * **arduino_listener.py**: Listens for readings from an XBee and converts
 them to ROS messages.
 * **live_broadcaster.py**: starts a mock live classification session for the gait 
 detection system. Waits for a certain amount of readings to create basic user
  mins and maxs and then starts classifying batches of incoming messages
  
-##Canal Surface Related Nodes & Scripts (/scripts/canal_surface_test)
+## Canal Surface Related Nodes & Scripts (/scripts/canal_surface_test)
 * **Segmentation**: segmentation library
 * **three_joint_publisher.py**: takes three imu topics and publishes transformations between them, assuming the first 
     is located on the upper arm, the second on the forearm and the third on the hand. When the program is started, it 
